@@ -31,8 +31,8 @@
   --accent: #17c8f5;
   --accent-dim: #1488f5;
   --wordmark-filter: invert(1) hue-rotate(180deg);
-  /* The page (background, headline, header) turns light, but the Tornado keeps
-     its exact dark-mode look — it runs on a dark rounded stage below. */
+  /* The whole page turns light; the full-bleed Tornado is recoloured to deeper
+     tones so it stays visible on the light surface. */
   color-scheme: light;
 }
 
@@ -79,11 +79,11 @@ button { color: inherit; }
 .hero-intro { max-width: 380px; margin: 26px 0 0; color: var(--muted); font-size: 15px; line-height: 1.7; }
 .hero-actions { display: flex; align-items: center; gap: 29px; margin-top: 32px; }
 
-/* ── Light mode: the page turns light, the Tornado keeps its exact dark-mode
-      look by running on a dark rounded "stage". ── */
-:root[data-theme="light"] .hero-visual { position: absolute; top: clamp(96px, 12vh, 132px); right: clamp(18px, 2.4vw, 30px); bottom: clamp(18px, 3vh, 28px); left: clamp(52%, 52.5vw, 55%); border-radius: clamp(20px, 1.9vw, 28px); background: #050a16; overflow: hidden; box-shadow: 0 42px 90px rgb(10 26 58 / 24%), 0 12px 28px rgb(10 26 58 / 16%); }
-:root[data-theme="light"] .hero-visual::after { background: transparent; }
-:root[data-theme="light"] .hero-visual-loading { background: radial-gradient(ellipse at 62% 52%, rgb(16 122 255 / 16%), transparent 55%); }
+/* ── Light mode: the whole page turns light and the Tornado stays full-bleed,
+      drawn in deeper tones (see hero-visual.tsx) so it reads on the light
+      surface. A soft light scrim keeps the headline legible. ── */
+:root[data-theme="light"] .hero-visual::after { background: linear-gradient(90deg, rgb(238 243 251 / 94%) 0%, rgb(238 243 251 / 74%) 34%, rgb(238 243 251 / 30%) 60%, rgb(238 243 251 / 0%) 84%); }
+:root[data-theme="light"] .hero-visual-loading { background: radial-gradient(ellipse at 62% 52%, rgb(16 122 255 / 9%), transparent 55%); }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 48px; padding: 0 19px; font-size: 12px; font-weight: 580; border: 0; cursor: pointer; transition: transform .2s ease, background .2s ease, color .2s ease; }
 .button:active { transform: scale(.98); }
 .button-primary { background: linear-gradient(110deg, #19c9f4, #1684f5); color: #03101e; }
@@ -212,11 +212,6 @@ button { color: inherit; }
   .site-header { width: min(100% - 56px, 1320px); }
   .hero { min-height: 100svh; }
   .hero h1 { font-size: clamp(53px, 7vw, 76px); }
-  /* Light mode stacks the copy over the (light) page with the dark animation
-     stage below it — a side-by-side split is too tight below 1020px. */
-  :root[data-theme="light"] .hero { flex-direction: column; align-items: stretch; justify-content: flex-start; padding-top: calc(88px + env(safe-area-inset-top)); padding-bottom: calc(30px + env(safe-area-inset-bottom)); }
-  :root[data-theme="light"] .hero-copy { order: 1; }
-  :root[data-theme="light"] .hero-visual { position: relative; inset: auto; order: 2; width: min(100% - 36px, 660px); margin: clamp(26px, 5vh, 44px) auto 0; flex: 1 1 auto; min-height: min(42svh, 430px); top: auto; right: auto; bottom: auto; left: auto; border-radius: clamp(18px, 2.4vw, 26px); box-shadow: 0 30px 70px rgb(10 26 58 / 22%); }
   .intro-grid { grid-template-columns: .75fr 1.6fr; gap: 30px; }
   .intro-note { grid-column: 2; margin-top: -18px; }
   .work-showcase { grid-template-columns: 1.2fr 1fr; }
@@ -235,6 +230,7 @@ button { color: inherit; }
   .nav-contact { justify-content: space-between; padding-top: 17px; }
   .hero { min-height: 100svh; padding-top: calc(96px + env(safe-area-inset-top)); padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
   .hero-visual::after { pointer-events: none; background: var(--hero-scrim-mobile); }
+  :root[data-theme="light"] .hero-visual::after { background: linear-gradient(180deg, rgb(238 243 251 / 74%) 0%, rgb(238 243 251 / 40%) 46%, rgb(238 243 251 / 84%) 100%); }
   .hero-copy { padding-bottom: 0; }
   .hero-eyebrow { margin-bottom: 23px; font-size: 9px; }
   .hero h1 { font-size: clamp(52px, 12.2vw, 82px); }

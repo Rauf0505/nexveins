@@ -86,7 +86,9 @@ const DOT_SIZE_SCALE = 1000;
 // colour so low-intensity points become invisible, and boost intensity so the
 // thin lines still read against a bright background.
 const LIGHT_SURFACE = "#eef3fb";
-const LIGHT_GAIN = 2.6;
+// Strand intensity peaks near 0.2, so a gain around 5 is needed for the strand
+// body to reach full colour (and stay visible) on the light surface.
+const LIGHT_GAIN = 5;
 
 const RIPPLE_RADIUS = 2;
 const RIPPLE_STRENGTH = 0.5;
