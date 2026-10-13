@@ -86,7 +86,7 @@ const DOT_SIZE_SCALE = 1000;
 // colour so low-intensity points become invisible, and boost intensity so the
 // thin lines still read against a bright background.
 const LIGHT_SURFACE = "#eef3fb";
-const LIGHT_GAIN = 2.2;
+const LIGHT_GAIN = 2.6;
 
 const RIPPLE_RADIUS = 2;
 const RIPPLE_STRENGTH = 0.5;
@@ -690,6 +690,9 @@ function createVortex(
     const w = container.clientWidth || 1;
     const h = container.clientHeight || 1;
     viewHeight = h;
+    // Lower pixel ratio on small screens: 3x-phone framebuffers are the
+    // single biggest GPU cost, and the glow aesthetic tolerates 1.3x fine.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, w < 768 ? 1.3 : 1.5));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
