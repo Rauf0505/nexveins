@@ -21,16 +21,18 @@ const DARK = {
 } as const;
 
 // Light mode: the page is light, so additive glow cannot show. The Tornado
-// stays full-bleed with the same shape/motion, drawn in deeper tones (with a
-// stronger glow so the strands reach full colour) so it reads on the surface.
+// stays full-bleed with the same shape/motion, rendered with real per-vertex
+// alpha in a deep navy -> blue -> cyan height gradient (see the component), so
+// the ends dissolve into the page instead of turning white. Glow values match
+// dark mode; the light gain maps intensity to the alpha ramp.
 const LIGHT = {
   mode: "light",
-  line: "#0b5fbf",
-  dot: "#0c86c4",
-  comet: "#0a6fd6",
-  lineGlow: 15,
-  dotGlow: 13,
-  cometGlow: 13,
+  line: "#08194d",
+  dot: "#0b4fb0",
+  comet: "#12b8e8",
+  lineGlow: 10,
+  dotGlow: 9,
+  cometGlow: 8,
 } as const;
 
 // Mobile browsers get a much lighter particle budget — the tornado stays

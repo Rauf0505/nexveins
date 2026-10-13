@@ -82,13 +82,19 @@ const COMET_GLOW_MAX = 1;
 const DOT_SIZE_SCALE = 1000;
 
 // Light mode cannot use additive blending (bright lines vanish on a light
-// surface). Instead we blend normally and fade each vertex toward the surface
-// colour so low-intensity points become invisible, and boost intensity so the
-// thin lines still read against a bright background.
-const LIGHT_SURFACE = "#eef3fb";
-// Strand intensity peaks near 0.2, so a gain around 5 is needed for the strand
-// body to reach full colour (and stay visible) on the light surface.
+// surface). Instead we render with real per-vertex alpha: the colour stays deep
+// and saturated and the fade (tips, tails, faint points) is done with
+// transparency, so ends dissolve into the page instead of turning white.
+// Strand intensity peaks near 0.2, so a gain around 5 maps it to a full 0..1
+// alpha ramp.
 const LIGHT_GAIN = 5;
+
+// Light-mode tornado colour ramp along its height: deep navy at the top through
+// rich blue to cyan at the base, so it reads as a colourful, dark shape on the
+// light page.
+const LIGHT_TOP = new THREE.Color("#08194d");
+const LIGHT_MID = new THREE.Color("#0b4fb0");
+const LIGHT_BOTTOM = new THREE.Color("#12b8e8");
 
 const RIPPLE_RADIUS = 2;
 const RIPPLE_STRENGTH = 0.5;
@@ -345,6 +351,7 @@ function createVortex(
     to: number;
     bright: number;
     offset: number;
+    colOffset: number;
     pts: Float32Array;
     cols: Float32Array;
   };
@@ -448,16 +455,44 @@ function createVortex(
     }
   }
 
-  const surfaceColor = new THREE.Color(LIGHT_SURFACE);
+  const gradColor = new THREE.Color();
 
+  // Light-mode colour for a point at height-parameter `s` (0 = base, 1 = top):
+  // cyan at the base -> rich blue -> deep navy at the top.
+  function lightColor(s: number) {
+    const t = clamp(s, 0, 1);
+    if (t < 0.5) gradColor.copy(LIGHT_BOTTOM).lerp(LIGHT_MID, t * 2);
+    else gradColor.copy(LIGHT_MID).lerp(LIGHT_TOP, (t - 0.5) * 2);
+    return gradColor;
+  }
+
+  // RGBA tint for strands & comets (colour attribute itemSize 4). Light mode
+  // keeps the colour and uses alpha for the fade, so nothing turns white.
   function writeTint(arr: Float32Array, at: number, color: THREE.Color, v: number) {
     if (cfgRef.current.mode === "light") {
-      let t = v * LIGHT_GAIN;
-      if (t <= 0) t = 0;
-      else if (t >= 1) t = 1;
-      arr[at] = surfaceColor.r + (color.r - surfaceColor.r) * t;
-      arr[at + 1] = surfaceColor.g + (color.g - surfaceColor.g) * t;
-      arr[at + 2] = surfaceColor.b + (color.b - surfaceColor.b) * t;
+      let a = v * LIGHT_GAIN;
+      if (a <= 0) a = 0;
+      else if (a >= 1) a = 1;
+      arr[at] = color.r;
+      arr[at + 1] = color.g;
+      arr[at + 2] = color.b;
+      arr[at + 3] = a;
+    } else {
+      arr[at] = color.r * v;
+      arr[at + 1] = color.g * v;
+      arr[at + 2] = color.b * v;
+      arr[at + 3] = 1;
+    }
+  }
+
+  // RGB tint for dots. InstancedMesh instanceColor carries no per-instance
+  // alpha, so in light mode faint dots shrink out via intensity (see the dot
+  // loop) instead of fading to white.
+  function writeDotTint(arr: Float32Array, at: number, color: THREE.Color, v: number) {
+    if (cfgRef.current.mode === "light") {
+      arr[at] = color.r;
+      arr[at + 1] = color.g;
+      arr[at + 2] = color.b;
     } else {
       arr[at] = color.r * v;
       arr[at + 1] = color.g * v;
@@ -501,7 +536,7 @@ function createVortex(
     const segs = STRAND_SEGMENTS - 1;
     const verts = count * segs * 2;
     strandPos = new Float32Array(verts * 3);
-    strandCol = new Float32Array(verts * 3);
+    strandCol = new Float32Array(verts * 4);
     strandGeo = track(new THREE.BufferGeometry());
     strandGeo.setAttribute(
       "position",
@@ -509,7 +544,7 @@ function createVortex(
     );
     strandGeo.setAttribute(
       "color",
-      new THREE.BufferAttribute(strandCol, 3).setUsage(THREE.DynamicDrawUsage)
+      new THREE.BufferAttribute(strandCol, 4).setUsage(THREE.DynamicDrawUsage)
     );
     const strandMat = track(
       withRepel(
@@ -537,8 +572,9 @@ function createVortex(
         to: 1,
         bright: 0.5,
         offset: i * segs * 2 * 3,
+        colOffset: i * segs * 2 * 4,
         pts: new Float32Array(STRAND_SEGMENTS * 3),
-        cols: new Float32Array(STRAND_SEGMENTS * 3),
+        cols: new Float32Array(STRAND_SEGMENTS * 4),
       });
     }
 
@@ -611,7 +647,7 @@ function createVortex(
     cometList = [];
     for (let i = 0; i < cometTotal; i++) {
       const trail = new Float32Array(tailLen * 3);
-      const trailCol = new Float32Array(tailLen * 3);
+      const trailCol = new Float32Array(tailLen * 4);
       const geo = track(new THREE.BufferGeometry());
       geo.setAttribute(
         "position",
@@ -619,7 +655,7 @@ function createVortex(
       );
       geo.setAttribute(
         "color",
-        new THREE.BufferAttribute(trailCol, 3).setUsage(THREE.DynamicDrawUsage)
+        new THREE.BufferAttribute(trailCol, 4).setUsage(THREE.DynamicDrawUsage)
       );
       const lineMat = track(
         withRepel(
@@ -888,27 +924,35 @@ function createVortex(
         tip *= tip;
       }
       const v = edge * lift * tip * alpha;
-      writeTint(cols, at, tint.strand, v);
+      const col = cfg.mode === "light" ? lightColor(s) : tint.strand;
+      writeTint(cols, i * 4, col, v);
     }
 
-    let w = strand.offset;
+    let wp = strand.offset;
+    let wc = strand.colOffset;
     for (let i = 0; i < STRAND_SEGMENTS - 1; i++) {
-      const a = i * 3;
-      const b = (i + 1) * 3;
-      strandPos[w] = pts[a];
-      strandPos[w + 1] = pts[a + 1];
-      strandPos[w + 2] = pts[a + 2];
-      strandCol[w] = cols[a];
-      strandCol[w + 1] = cols[a + 1];
-      strandCol[w + 2] = cols[a + 2];
-      w += 3;
-      strandPos[w] = pts[b];
-      strandPos[w + 1] = pts[b + 1];
-      strandPos[w + 2] = pts[b + 2];
-      strandCol[w] = cols[b];
-      strandCol[w + 1] = cols[b + 1];
-      strandCol[w + 2] = cols[b + 2];
-      w += 3;
+      const pa = i * 3;
+      const pb = (i + 1) * 3;
+      const ca = i * 4;
+      const cb = (i + 1) * 4;
+      strandPos[wp] = pts[pa];
+      strandPos[wp + 1] = pts[pa + 1];
+      strandPos[wp + 2] = pts[pa + 2];
+      strandCol[wc] = cols[ca];
+      strandCol[wc + 1] = cols[ca + 1];
+      strandCol[wc + 2] = cols[ca + 2];
+      strandCol[wc + 3] = cols[ca + 3];
+      wp += 3;
+      wc += 4;
+      strandPos[wp] = pts[pb];
+      strandPos[wp + 1] = pts[pb + 1];
+      strandPos[wp + 2] = pts[pb + 2];
+      strandCol[wc] = cols[cb];
+      strandCol[wc + 1] = cols[cb + 1];
+      strandCol[wc + 2] = cols[cb + 2];
+      strandCol[wc + 3] = cols[cb + 3];
+      wp += 3;
+      wc += 4;
     }
   }
 
@@ -972,7 +1016,8 @@ function createVortex(
       const v = comet.bright * cfg.cometGlow * along * ends;
 
       const hot = entrance * (i < 3 ? 1.3 : 1);
-      writeTint(comet.trailCol, at, tint.comet, v * hot);
+      const col = cfg.mode === "light" ? lightColor(s) : tint.comet;
+      writeTint(comet.trailCol, i * 4, col, v * hot);
     }
 
     comet.head.position.set(comet.trail[0], comet.trail[1], comet.trail[2]);
@@ -1087,14 +1132,6 @@ function createVortex(
         }
 
         const alive = dotAlive[i];
-        const scale = size * dotScale[i] * alive;
-        dummy.makeScale(scale, scale, scale);
-        dummy.setPosition(
-          dotHome[at] + dotShift[at],
-          dotHome[at + 1] + dotShift[at + 1],
-          dotHome[at + 2] + dotShift[at + 2]
-        );
-        dotMesh.setMatrixAt(i, dummy);
 
         const beat =
           1 -
@@ -1104,7 +1141,21 @@ function createVortex(
         const swollen = dotScale[i] > 1.02 ? 1 + (dotScale[i] - 1) * 0.5 : 1;
         const v =
           dot.bright * beat * cfg.dotGlow * swollen * fadeDot * (1 + dotFlash[i]) * alive;
-        writeTint(dotColors, at, tint.dot, v);
+
+        // Light mode has no per-instance alpha for dots, so faint dots shrink
+        // out via intensity instead of fading to white.
+        const vis = cfg.mode === "light" ? clamp(v, 0, 1) : 1;
+        const scale = size * dotScale[i] * alive * vis;
+        dummy.makeScale(scale, scale, scale);
+        dummy.setPosition(
+          dotHome[at] + dotShift[at],
+          dotHome[at + 1] + dotShift[at + 1],
+          dotHome[at + 2] + dotShift[at + 2]
+        );
+        dotMesh.setMatrixAt(i, dummy);
+
+        const col = cfg.mode === "light" ? lightColor(dot.s) : tint.dot;
+        writeDotTint(dotColors, at, col, v);
       }
       dotMesh.instanceMatrix.needsUpdate = true;
       if (dotMesh.instanceColor) dotMesh.instanceColor.needsUpdate = true;
