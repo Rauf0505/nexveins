@@ -10,7 +10,10 @@
   --line-strong: rgb(217 233 255 / 25%);
   --accent: #17c8f5;
   --accent-dim: #1488f5;
-  --wordmark-filter: none;
+  --hero-ink: #050914;
+  --hero-paper: #f1f7ff;
+  --hero-muted: #9aa7bd;
+  --hero-wordmark-filter: none;
   --hero-scrim: linear-gradient(90deg, rgb(5 9 20 / 94%) 0%, rgb(5 9 20 / 74%) 32%, rgb(5 9 20 / 26%) 62%, rgb(5 9 20 / 0%) 88%);
   --hero-scrim-mobile: linear-gradient(180deg, rgb(5 9 20 / 86%) 0%, rgb(5 9 20 / 62%) 44%, rgb(5 9 20 / 90%) 100%);
   --hero-loading: radial-gradient(ellipse at 62% 52%, rgb(16 122 255 / 22%), transparent 55%);
@@ -30,11 +33,15 @@
   --line-strong: rgb(10 30 60 / 26%);
   --accent: #17c8f5;
   --accent-dim: #1488f5;
-  --wordmark-filter: invert(1) hue-rotate(180deg);
-  --hero-scrim: linear-gradient(90deg, rgb(238 243 251 / 94%) 0%, rgb(238 243 251 / 70%) 34%, rgb(238 243 251 / 22%) 62%, rgb(238 243 251 / 0%) 86%);
-  --hero-scrim-mobile: linear-gradient(180deg, rgb(238 243 251 / 70%) 0%, rgb(238 243 251 / 38%) 46%, rgb(238 243 251 / 80%) 100%);
-  --hero-loading: radial-gradient(ellipse at 62% 52%, rgb(16 122 255 / 14%), transparent 55%);
+  /* The hero (animation + overlay text) is intentionally dark in BOTH themes,
+     so the Tornado looks exactly the same in light and dark mode. */
   color-scheme: light;
+}
+
+:root[data-theme="light"] .theme-toggle {
+  --paper: #f1f7ff;
+  --line-strong: rgb(217 233 255 / 25%);
+  --accent: #17c8f5;
 }
 
 * { box-sizing: border-box; }
@@ -54,7 +61,7 @@ button { color: inherit; }
 .eyebrow-mark { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 45%, transparent); }
 .site-header { position: absolute; top: 0; left: 50%; z-index: 10; display: flex; align-items: center; justify-content: space-between; width: min(100% - 96px, 1320px); height: 84px; transform: translateX(-50%); border-bottom: 1px solid transparent; }
 .wordmark { display: inline-flex; align-items: center; white-space: nowrap; }
-.wordmark-image { display: block; width: clamp(150px, 15vw, 190px); height: auto; filter: var(--wordmark-filter); transition: filter .35s ease; }
+.wordmark-image { display: block; width: clamp(150px, 15vw, 190px); height: auto; filter: var(--hero-wordmark-filter); transition: filter .35s ease; }
 .primary-nav { display: flex; align-items: center; gap: clamp(22px, 3vw, 44px); color: #c2c7bf; font-size: 12px; }
 .primary-nav > a:not(.nav-contact) { transition: color .2s ease; }
 .primary-nav > a:not(.nav-contact):hover { color: var(--accent); }
@@ -69,14 +76,15 @@ button { color: inherit; }
 .theme-toggle:active { transform: scale(.96); }
 
 .hero { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; min-height: 100svh; padding-top: 84px; padding-bottom: 40px; }
-.hero-visual { position: absolute; inset: 0; z-index: 0; }
+.hero-visual { position: absolute; inset: 0; z-index: 0; background: var(--hero-ink); }
 .hero-visual::after { position: absolute; inset: 0; pointer-events: none; content: ""; background: var(--hero-scrim); transition: background .35s ease; }
 .hero-visual-loading { position: absolute; inset: 0; background: var(--hero-loading); }
 .hero-copy { position: relative; z-index: 2; padding-bottom: 12px; }
-.hero-eyebrow { margin-bottom: 29px; }
+.hero-eyebrow { margin-bottom: 29px; color: var(--hero-muted); }
 .hero h1, .section-heading h2, .work-heading h2, .approach-lead h2, .contact-copy h2 { margin: 0; font-size: clamp(54px, 6.7vw, 94px); line-height: .97; font-weight: 470; letter-spacing: -.075em; }
+.hero h1 { color: var(--hero-paper); }
 .hero h1 span, .section-heading h2 span, .work-heading h2 span, .approach-lead h2 span, .contact-copy h2 span { color: var(--accent); }
-.hero-intro { max-width: 380px; margin: 26px 0 0; color: var(--muted); font-size: 15px; line-height: 1.7; }
+.hero-intro { max-width: 380px; margin: 26px 0 0; color: var(--hero-muted); font-size: 15px; line-height: 1.7; }
 .hero-actions { display: flex; align-items: center; gap: 29px; margin-top: 32px; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 48px; padding: 0 19px; font-size: 12px; font-weight: 580; border: 0; cursor: pointer; transition: transform .2s ease, background .2s ease, color .2s ease; }
 .button:active { transform: scale(.98); }
