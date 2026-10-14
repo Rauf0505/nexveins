@@ -20,6 +20,15 @@ const DARK = {
   cometGlow: 8,
 } as const;
 
+// Mobile dark: ~half the strands and ~a third of the dots are rasterised, so
+// raise the glow to compensate and keep the tornado glowing on a phone.
+const DARK_MOBILE = {
+  ...DARK,
+  lineGlow: 13,
+  dotGlow: 13,
+  cometGlow: 10,
+} as const;
+
 // Light mode: the page is light, so additive glow cannot show. The Tornado
 // stays full-bleed with the same shape/motion, rendered with real per-vertex
 // alpha in a deep navy -> blue -> cyan height gradient (see the component), so
@@ -35,15 +44,15 @@ const LIGHT = {
   cometGlow: 8,
 } as const;
 
-// Mobile browsers get a much lighter particle budget — the tornado stays
-// bright because line/dot glow is raised while strand & dot counts drop.
+// Mobile browsers get a lighter particle budget; DARK_MOBILE raises the glow to
+// compensate so the tornado still reads (and glows) on a phone.
 const DESKTOP_COUNTS = { line: 130, dot: 2600, comet: 7 };
 const MOBILE_COUNTS = { line: 62, dot: 950, comet: 3 };
 
-function useCompactViewport(breakpoint = 780) {
+function useCompactViewport(breakpoint = 760) {
   const [compact, setCompact] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
     const apply = () => setCompact(mq.matches);
     apply();
     mq.addEventListener("change", apply);
@@ -55,7 +64,7 @@ function useCompactViewport(breakpoint = 780) {
 export function HeroVisual() {
   const compact = useCompactViewport();
   const theme = useTheme();
-  const palette = theme === "light" ? LIGHT : DARK;
+  const palette = theme === "light" ? LIGHT : compact ? DARK_MOBILE : DARK;
   const counts = compact ? MOBILE_COUNTS : DESKTOP_COUNTS;
 
   return (

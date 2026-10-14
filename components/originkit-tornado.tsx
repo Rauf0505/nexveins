@@ -730,7 +730,7 @@ function createVortex(
     viewHeight = h;
     // Lower pixel ratio on small screens: 3x-phone framebuffers are the
     // single biggest GPU cost, and the glow aesthetic tolerates 1.3x fine.
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, w < 768 ? 1.3 : 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, w <= 760 ? 1.3 : 1.5));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();

@@ -12,7 +12,7 @@
   --accent-dim: #1488f5;
   --wordmark-filter: none;
   --hero-scrim: linear-gradient(90deg, rgb(5 9 20 / 94%) 0%, rgb(5 9 20 / 74%) 32%, rgb(5 9 20 / 26%) 62%, rgb(5 9 20 / 0%) 88%);
-  --hero-scrim-mobile: linear-gradient(180deg, rgb(5 9 20 / 86%) 0%, rgb(5 9 20 / 62%) 44%, rgb(5 9 20 / 90%) 100%);
+  --hero-scrim-mobile: linear-gradient(180deg, rgb(5 9 20 / 80%) 0%, rgb(5 9 20 / 42%) 46%, rgb(5 9 20 / 84%) 100%);
   --hero-loading: radial-gradient(ellipse at 62% 52%, rgb(16 122 255 / 22%), transparent 55%);
   --font-sans: var(--font-geist), Arial, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
