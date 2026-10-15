@@ -1,6 +1,7 @@
 import { SiteNav } from "@/components/site-nav";
 import { HeroVisual } from "@/components/hero-visual";
 import { HeroActions } from "@/components/hero-actions";
+import { Reveal } from "@/components/reveal";
 
 export default function Home() {
   return (
@@ -18,6 +19,19 @@ export default function Home() {
             <HeroActions />
           </div>
         </section>
+
+        <section className="intro-band" id="studio-intro" aria-labelledby="studio-intro-title">
+          <Reveal className="intro-grid page-wrap">
+            <p className="eyebrow">Our point of view</p>
+            <h2 className="intro-statement" id="studio-intro-title">
+              Great software starts by solving the <em>right problem.</em>
+            </h2>
+            <p className="intro-note">
+              We bring product thinking, design, and engineering together to turn ambitious ideas into digital products people rely on.
+            </p>
+          </Reveal>
+        </section>
+
       </main>
     </>
   );

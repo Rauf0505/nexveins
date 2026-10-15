@@ -16,6 +16,11 @@
   --hero-loading: radial-gradient(ellipse at 62% 52%, rgb(16 122 255 / 22%), transparent 55%);
   --font-sans: var(--font-geist), Arial, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --editorial-intro: #101925;
+  --editorial-text: #e8edf4;
+  --editorial-muted: #a5b0be;
+  --editorial-accent: #65b1ca;
   --curve: cubic-bezier(.22, 1, .36, 1);
   color-scheme: dark;
 }
@@ -30,6 +35,10 @@
   --line-strong: rgb(10 30 60 / 26%);
   --accent: #17c8f5;
   --accent-dim: #1488f5;
+  --editorial-intro: #f4f6f8;
+  --editorial-text: #152235;
+  --editorial-muted: #536174;
+  --editorial-accent: #247fa5;
   --wordmark-filter: invert(1) hue-rotate(180deg);
   /* The whole page turns light; the full-bleed Tornado is recoloured to deeper
      tones so it stays visible on the light surface. */
@@ -119,12 +128,13 @@ button { color: inherit; }
 .text-link { display: inline-flex; align-items: center; gap: 10px; color: #c0c5be; font-size: 11px; transition: color .2s ease; }
 .text-link:hover { color: var(--accent); }
 .text-link svg { color: var(--accent); }
-.intro-band { background: #080e1c; color: var(--paper); }
-.intro-grid { display: grid; grid-template-columns: 1fr 2.1fr 1fr; align-items: start; gap: 48px; padding-block: 68px; }
-.intro-grid .eyebrow { color: #a7ada5; }
-.intro-statement { max-width: 690px; margin: -7px 0 0; font-size: clamp(26px, 3.25vw, 43px); line-height: 1.21; letter-spacing: -.055em; }
-.intro-statement em { color: var(--accent); font-style: normal; }
-.intro-note { max-width: 240px; margin: 6px 0 0; color: #a5aaa3; font-size: 12px; line-height: 1.75; }
+.intro-band { position: relative; isolation: isolate; background: var(--editorial-intro); color: var(--editorial-text); transition: background-color .35s ease, color .35s ease; }
+.intro-band::before { position: absolute; z-index: 0; right: 0; bottom: 100%; left: 0; height: clamp(96px, 14vh, 150px); pointer-events: none; content: ""; background: linear-gradient(180deg, transparent 0%, var(--editorial-intro) 100%); }
+.intro-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(230px, .7fr); align-items: end; gap: 26px 70px; padding-block: clamp(66px, 7vw, 94px); }
+.intro-grid .eyebrow { grid-column: 1 / -1; color: var(--editorial-muted); font-size: 11px; }
+.intro-statement { max-width: 720px; margin: 0; font-family: var(--font-display); font-size: clamp(36px, 4vw, 42px); line-height: 1.12; font-weight: 400; letter-spacing: -.02em; }
+.intro-statement em { color: var(--editorial-accent); font-style: italic; }
+.intro-note { max-width: 340px; margin: 0 0 3px auto; color: var(--editorial-muted); font-size: 15px; line-height: 1.75; }
 
 .section-heading { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 40px; margin-bottom: 72px; }
 .section-heading .eyebrow { grid-column: 1 / -1; margin-bottom: -21px; }
@@ -245,8 +255,10 @@ button { color: inherit; }
   .nav-end { gap: 8px; }
   .hero { min-height: 100svh; }
   .hero h1 { font-size: clamp(53px, 7vw, 76px); }
-  .intro-grid { grid-template-columns: .75fr 1.6fr; gap: 30px; }
-  .intro-note { grid-column: 2; margin-top: -18px; }
+  .intro-grid { grid-template-columns: minmax(0, 1.4fr) minmax(220px, .8fr); gap: 24px 38px; }
+  .intro-grid .eyebrow { grid-column: 1 / -1; }
+  .intro-statement { grid-column: 1; }
+  .intro-note { grid-column: 2; margin: 0 0 3px; }
   .work-showcase { grid-template-columns: 1.2fr 1fr; }
   .contact-inner { gap: 8%; }
 }
@@ -255,6 +267,7 @@ button { color: inherit; }
   .page-wrap { width: min(100% - 40px, 620px); }
   .section-pad { padding-block: 90px; }
   .site-header { top: calc(12px + env(safe-area-inset-top)); width: min(100% - 32px, 620px); }
+  .intro-band::before { height: clamp(72px, 12vh, 104px); }
   .nav-glass { min-height: 62px; gap: 9px; padding: 0 10px 0 13px; border-radius: 16px; }
   .wordmark { gap: 6px; }
   .wordmark-emblem { width: 28px; height: 26px; }
@@ -276,10 +289,10 @@ button { color: inherit; }
   .hero h1 { font-size: clamp(52px, 12.2vw, 82px); }
   .hero-intro { max-width: 330px; margin-top: 20px; font-size: 13px; }
   .hero-actions { flex-wrap: wrap; gap: 21px; margin-top: 25px; }
-  .intro-grid { display: flex; flex-direction: column; gap: 22px; padding-block: 48px; }
-  .intro-grid .eyebrow { font-size: 9px; }
-  .intro-statement { margin: 0; font-size: clamp(28px, 7vw, 40px); }
-  .intro-note { max-width: 330px; margin: 0; font-size: 11px; }
+  .intro-grid { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; padding-block: 58px; }
+  .intro-grid .eyebrow { font-size: 11px; }
+  .intro-statement { max-width: 540px; margin: 0; font-size: clamp(36px, 9vw, 42px); }
+  .intro-note { max-width: 400px; margin: 0; font-size: 15px; }
   .section-heading { display: block; margin-bottom: 42px; }
   .section-heading .eyebrow { margin-bottom: 22px; }
   .section-heading h2, .work-heading h2, .approach-lead h2, .contact-copy h2 { font-size: clamp(46px, 10vw, 66px); }
