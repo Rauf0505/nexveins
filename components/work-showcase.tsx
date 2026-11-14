@@ -1,53 +1,141 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
+import Image from "next/image";
+import { useRef } from "react";
+import { motion, useMotionTemplate, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
 
-const concepts = [
-  { name: "Meridian", category: "Fintech platform", tag: "01 / PRODUCT DESIGN", description: "A calmer way for modern teams to understand their money and make the next move.", field: "MERIDIAN / FINANCIAL CLARITY", shape: "meridian" },
-  { name: "Alto", category: "Digital health", tag: "02 / MOBILE PRODUCT", description: "A more considered daily companion for people navigating their own wellbeing.", field: "ALTO / CARE, IN CONTEXT", shape: "alto" },
-  { name: "Relay", category: "Operations software", tag: "03 / AI & AUTOMATION", description: "A connected operations layer that makes busy work feel a little less busy.", field: "RELAY / FLOW, RESTORED", shape: "relay" },
+type Project = {
+  name: string;
+  tags: string;
+  description: string;
+  image: string;
+  alt: string;
+  url?: string;
+  host?: string;
+};
+
+const projects: Project[] = [
+  {
+    name: "ServePilot",
+    tags: "SaaS • Point of Sale • Web",
+    description: "A restaurant management and POS platform that brings checkout, inventory, menu work, staff operations and reporting into one workspace.",
+    image: "/projects/servepilot.jpg",
+    alt: "ServePilot website: the headline “Run every service with confidence” beside a dashboard preview showing daily sales, orders and low stock.",
+    url: "https://nexveins.vercel.app/",
+    host: "nexveins.vercel.app",
+  },
+  {
+    name: "Loom Ledger",
+    tags: "ERP • Textile Trade • Concept",
+    description: "Order, lot and dispatch tracking for a weaving export house — one ledger that follows the yarn from intake to the container door.",
+    image: "/projects/loom-ledger.jpg",
+    alt: "Dark office wall screen showing an abstract enterprise dashboard with cyan charts, data panels and a shipment map.",
+  },
+  {
+    name: "German Fitness",
+    tags: "E-commerce • Gym • Web",
+    description: "A fitness and equipment storefront presenting training services, premium brands and product discovery for a gym audience.",
+    image: "/projects/german-fitness.jpg",
+    alt: "German Fitness website: a barbell photo behind the headline “Become Unstoppable”, with navigation for brands, products and services.",
+    url: "https://thegermanfitness.com/",
+    host: "thegermanfitness.com",
+  },
+  {
+    name: "Transit Grid",
+    tags: "Logistics • Control Tower • Concept",
+    description: "Live ETAs, driver check-ins and load planning on a single board, so the dispatch desk stops working the phone.",
+    image: "/projects/transit-grid.jpg",
+    alt: "Night freight yard from above with a translucent cyan route map overlaid across containers and trucks.",
+  },
+  {
+    name: "Clinic Flow",
+    tags: "Healthcare • Booking • Concept",
+    description: "Appointments, patient records and reminders for a multi-doctor clinic, built around the front desk rather than the other way round.",
+    image: "/projects/clinic-flow.jpg",
+    alt: "Dim clinic reception with a tablet on the counter showing an abstract appointment calendar in glowing cyan blocks.",
+  },
+  {
+    name: "Paper Mind",
+    tags: "AI • Documents • Concept",
+    description: "Search, summarise and draft from your own contracts and quotes, with the answer kept inside the paperwork you actually signed.",
+    image: "/projects/paper-mind.jpg",
+    alt: "Floating translucent glass panels in a dark void, each holding blurred lines and cyan highlights joined by fine light threads.",
+  },
 ];
 
 export function WorkShowcase() {
-  const [selected, setSelected] = useState(0);
-  const reduced = useReducedMotion();
-  const project = concepts[selected];
-
-  const change = (direction: number) => setSelected((current) => (current + direction + concepts.length) % concepts.length);
+  const rows: { start: number; items: Project[] }[] = [];
+  for (let start = 0; start < projects.length; start += 2) rows.push({ start, items: projects.slice(start, start + 2) });
 
   return (
-    <div className="work-showcase">
-      <div className={`project-art ${project.shape}`} aria-label={`${project.name} concept artwork`}>
-        <AnimatePresence mode="wait">
-          <motion.div key={project.shape} className="artwork-scene" initial={reduced ? false : { opacity: 0, scale: 0.96, rotate: -2 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} exit={reduced ? undefined : { opacity: 0, scale: 1.02, rotate: 2 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}>
-            {project.shape === "meridian" && <><div className="meridian-disc" /><div className="meridian-ring ring-one" /><div className="meridian-ring ring-two" /><div className="meridian-cross" /><span className="artword">m.</span></>}
-            {project.shape === "alto" && <><div className="alto-sun" /><div className="alto-horizon" /><div className="alto-arc arc-a" /><div className="alto-arc arc-b" /><span className="artword alto-word">a</span></>}
-            {project.shape === "relay" && <><div className="relay-core" /><div className="relay-path path-a" /><div className="relay-path path-b" /><div className="relay-path path-c" /><div className="relay-node relay-node-a" /><div className="relay-node relay-node-b" /><div className="relay-node relay-node-c" /><span className="artword relay-word">R</span></>}
-          </motion.div>
-        </AnimatePresence>
-        <div className="project-art-top"><span>CONCEPT / {String(selected + 1).padStart(2, "0")}</span><span>NX STUDIO</span></div>
-        <div className="project-art-foot">{project.field}</div>
-      </div>
-      <div className="project-detail" aria-live="polite" aria-atomic="true">
-        <div className="project-detail-top"><span className="project-tag">{project.tag}</span><span className="project-category">{project.category}</span></div>
-        <div className="project-detail-main">
-          <AnimatePresence mode="wait">
-            <motion.div key={project.name} initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={reduced ? undefined : { opacity: 0, y: -10 }} transition={{ duration: 0.25 }}>
-              <h3>{project.name}<span>.</span></h3>
-              <p>{project.description}</p>
-            </motion.div>
-          </AnimatePresence>
-          <button className="circle-link" type="button" aria-label="Move to next concept" onClick={() => change(1)}><ArrowUpRight size={20} weight="bold" aria-hidden="true" /></button>
-        </div>
-        <div className="project-controls">
-          <div className="project-tabs" role="group" aria-label="Choose concept project">
-            {concepts.map((item, index) => <button key={item.name} type="button" className={index === selected ? "is-selected" : ""} aria-pressed={index === selected} onClick={() => setSelected(index)}>{item.name}</button>)}
-          </div>
-          <div className="project-arrows"><button type="button" aria-label="Previous concept" onClick={() => change(-1)}><ArrowLeft size={17} /></button><button type="button" aria-label="Next concept" onClick={() => change(1)}><ArrowRight size={17} /></button></div>
-        </div>
-      </div>
+    <div className="project-stack">
+      {rows.map((row) => (
+        <ProjectRow key={row.start} items={row.items} start={row.start} total={projects.length} />
+      ))}
     </div>
+  );
+}
+
+function ProjectRow({ items, start, total }: { items: Project[]; start: number; total: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  /* One reading for the row, shared by both plates, so the pair always opens on
+     the same beat. Measuring each plate separately would let the taller one
+     finish later than its neighbour. */
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
+
+  return (
+    <div className="project-row" ref={ref}>
+      {items.map((project, offset) => (
+        <ProjectPlate key={project.name} project={project} number={start + offset + 1} total={total} progress={scrollYProgress} />
+      ))}
+    </div>
+  );
+}
+
+function ProjectPlate({ project, number, total, progress }: { project: Project; number: number; total: number; progress: MotionValue<number> }) {
+  const still = useReducedMotion() === true;
+
+  /* The shot is unveiled from its top edge down and settles from a slight
+     over-crop, so scrolling back closes it again. Progress runs from the row's
+     top edge appearing at the bottom of the screen until the row sits in the
+     middle of it. */
+  const curtain = useTransform(progress, [0, 0.72], [100, 0]);
+  const clip = useMotionTemplate`inset(0% 0% ${curtain}% 0%)`;
+  const zoom = useTransform(progress, [0, 1], [1.14, 1]);
+  const textY = useTransform(progress, [0.1, 0.94], [26, 0]);
+  const textOpacity = useTransform(progress, [0.08, 0.6], [0, 1]);
+  /* The index badge belongs to the shot, so it arrives with the curtain rather
+     than floating over a plate that has not opened yet. */
+  const badge = useTransform(curtain, (closed) => 1 - closed / 100);
+
+  return (
+    <article className="project-plate">
+      <div className="plate-media">
+        <motion.div className="plate-shot" style={still ? undefined : { clipPath: clip, scale: zoom }}>
+          <Image src={project.image} alt={project.alt} width={1400} height={933} sizes="(max-width: 760px) 92vw, (max-width: 1100px) 84vw, 41vw" loading={number === 1 ? "eager" : "lazy"} decoding="async" />
+        </motion.div>
+        <motion.span className="plate-index" style={still ? undefined : { opacity: badge }}>{String(number).padStart(2, "0")} / {String(total).padStart(2, "0")}</motion.span>
+      </div>
+
+      <motion.div className="plate-meta" style={still ? undefined : { y: textY, opacity: textOpacity }}>
+        <p className="plate-tags">{project.tags}</p>
+        <div className="plate-name">
+          <span className="plate-arrow" aria-hidden="true"><ArrowRight size={22} weight="light" /></span>
+          <h3>{project.name}</h3>
+        </div>
+        <div className="plate-foot">
+          <p className="plate-note">{project.description}</p>
+          {project.url ? (
+            <a className="plate-link" href={project.url} target="_blank" rel="noopener noreferrer">
+              {project.host} <ArrowUpRight size={15} weight="bold" aria-hidden="true" />
+            </a>
+          ) : (
+            <span className="plate-demo">Demo build</span>
+          )}
+        </div>
+      </motion.div>
+    </article>
   );
 }

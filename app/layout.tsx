@@ -7,13 +7,16 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 const instrumentSerif = Instrument_Serif({ variable: "--font-instrument-serif", subsets: ["latin"], weight: "400", display: "swap" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://nexveins-beta.vercel.app"),
   title: "Nexveins® | Software with a point of view",
   description:
-    "Nexveins is a product engineering studio for teams ready to turn complex ideas into software people want to use.",
+    "Nexveins is a software house building custom systems, high-performance websites, SEO and AI automation for teams ready to turn complex ideas into software people want to use.",
+  keywords: ["software house", "system software development", "website development", "SEO", "AI automation", "NexVeins"],
   openGraph: {
     title: "Nexveins® | Software with a point of view",
-    description: "Product thinking, design craft and serious engineering. In one close-knit team.",
+    description: "Custom software, modern websites, digital marketing, SEO and AI automation — product thinking, design craft and serious engineering in one close-knit team.",
     type: "website",
+    url: "/",
   },
 };
 
@@ -27,11 +30,11 @@ const themeScript = `(function(){try{var k="nexveins-theme";var s=window.localSt
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={`${geist.variable} ${geistMono.variable} ${instrumentSerif.variable}`}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
