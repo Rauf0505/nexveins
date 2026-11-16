@@ -11,11 +11,10 @@ export function ProcessSection() {
   return (
     <section className="section-pad process-section" id="process" aria-labelledby="process-title">
       <div className="page-wrap">
-        <div className="section-heading">
+        <Reveal className="section-heading">
           <p className="eyebrow"><span className="eyebrow-mark" /> Our working process</p>
           <h2 id="process-title">From concept to <span>completion.</span></h2>
-          <p>Four steps, in the same order every time, so you always know what is happening and what comes next.</p>
-        </div>
+        </Reveal>
         <Reveal className="process-track">
           {steps.map((step, index) => (
             <div className="process-step" key={step.title}>

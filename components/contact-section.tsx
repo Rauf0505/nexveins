@@ -1,11 +1,12 @@
 "use client"
 import { EnvelopeSimple, Phone } from "@phosphor-icons/react";
 import { ContactForm } from "@/components/contact-form";
+import { Reveal } from "@/components/reveal";
 
 export function ContactSection() {
   return (
     <section className="contact-section" id="contact" aria-labelledby="contact-title">
-      <div className="contact-inner page-wrap">
+      <Reveal className="contact-inner page-wrap">
         <div className="contact-copy">
           <p className="eyebrow"><span className="eyebrow-mark" /> Contact us</p>
           <h2 id="contact-title">Let's talk about your <span>next project.</span></h2>
@@ -28,7 +29,7 @@ export function ContactSection() {
           </div>
         </div>
         <ContactForm />
-      </div>
+      </Reveal>
     </section>
   );
 }

@@ -71,13 +71,13 @@ export function WorkShowcase() {
   return (
     <div className="project-stack">
       {rows.map((row) => (
-        <ProjectRow key={row.start} items={row.items} start={row.start} total={projects.length} />
+        <ProjectRow key={row.start} items={row.items} start={row.start} />
       ))}
     </div>
   );
 }
 
-function ProjectRow({ items, start, total }: { items: Project[]; start: number; total: number }) {
+function ProjectRow({ items, start }: { items: Project[]; start: number }) {
   const ref = useRef<HTMLDivElement>(null);
 
   /* One reading for the row, shared by both plates, so the pair always opens on
@@ -88,13 +88,13 @@ function ProjectRow({ items, start, total }: { items: Project[]; start: number; 
   return (
     <div className="project-row" ref={ref}>
       {items.map((project, offset) => (
-        <ProjectPlate key={project.name} project={project} number={start + offset + 1} total={total} progress={scrollYProgress} />
+        <ProjectPlate key={project.name} project={project} number={start + offset + 1} progress={scrollYProgress} />
       ))}
     </div>
   );
 }
 
-function ProjectPlate({ project, number, total, progress }: { project: Project; number: number; total: number; progress: MotionValue<number> }) {
+function ProjectPlate({ project, number, progress }: { project: Project; number: number; progress: MotionValue<number> }) {
   const still = useReducedMotion() === true;
 
   /* The shot is unveiled from its top edge down and settles from a slight
@@ -106,9 +106,6 @@ function ProjectPlate({ project, number, total, progress }: { project: Project; 
   const zoom = useTransform(progress, [0, 1], [1.14, 1]);
   const textY = useTransform(progress, [0.1, 0.94], [26, 0]);
   const textOpacity = useTransform(progress, [0.08, 0.6], [0, 1]);
-  /* The index badge belongs to the shot, so it arrives with the curtain rather
-     than floating over a plate that has not opened yet. */
-  const badge = useTransform(curtain, (closed) => 1 - closed / 100);
 
   return (
     <article className="project-plate">
@@ -116,7 +113,6 @@ function ProjectPlate({ project, number, total, progress }: { project: Project; 
         <motion.div className="plate-shot" style={still ? undefined : { clipPath: clip, scale: zoom }}>
           <Image src={project.image} alt={project.alt} width={1400} height={933} sizes="(max-width: 760px) 92vw, (max-width: 1100px) 84vw, 41vw" loading={number === 1 ? "eager" : "lazy"} decoding="async" />
         </motion.div>
-        <motion.span className="plate-index" style={still ? undefined : { opacity: badge }}>{String(number).padStart(2, "0")} / {String(total).padStart(2, "0")}</motion.span>
       </div>
 
       <motion.div className="plate-meta" style={still ? undefined : { y: textY, opacity: textOpacity }}>

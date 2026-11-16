@@ -50,13 +50,12 @@ export default function Home() {
 
         <section className="work-section" id="work" aria-labelledby="work-title">
           <div className="work-inner page-wrap">
-            <div className="work-heading">
+            <Reveal className="work-heading">
               <div>
                 <p className="eyebrow"><span className="eyebrow-mark" /> Selected work</p>
                 <h2 id="work-title">Selected work. <span>Real solutions.</span></h2>
               </div>
-              <p>Explore the digital solutions we have designed and developed to help businesses operate smarter and grow faster.</p>
-            </div>
+            </Reveal>
             <WorkShowcase />
           </div>
         </section>

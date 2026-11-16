@@ -1,4 +1,6 @@
 "use client"
+
+import { useState } from "react";
 import { ArrowsCounterClockwise, Code, Gauge, ShieldCheck, SlidersHorizontal, UsersThree } from "@phosphor-icons/react";
 import { Reveal } from "@/components/reveal";
 
@@ -12,29 +14,41 @@ const reasons = [
 ];
 
 export function WhySection() {
+  const [active, setActive] = useState(0);
+
   return (
     <section className="section-pad why-section" id="why" aria-labelledby="why-title">
       <div className="page-wrap">
-        <div className="section-heading">
+        <Reveal className="section-heading">
           <p className="eyebrow"><span className="eyebrow-mark" /> Why NexVeins</p>
           <h2 id="why-title">Why businesses <span>choose NexVeins.</span></h2>
-          <p>Six things we hold ourselves to on every project, from the first conversation to the support that follows it.</p>
-        </div>
-        <div className="why-grid">
-          {reasons.map((reason, index) => {
-            const Icon = reason.icon;
-            return (
-              <Reveal className="why-card" key={reason.title} delay={index * 0.06}>
-                <span className="why-card-top">
-                  <span className="why-number">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="why-icon"><Icon size={22} weight="light" aria-hidden="true" /></span>
-                </span>
-                <h3>{reason.title}</h3>
-                <p>{reason.body}</p>
-              </Reveal>
-            );
-          })}
-        </div>
+        </Reveal>
+
+        <Reveal className="why-split">
+          <ul className="why-list">
+            {reasons.map((reason, index) => (
+              <li className={`why-row${index === active ? " is-current" : index < active ? " is-past" : ""}`} key={reason.title}>
+                <button type="button" onClick={() => setActive(index)} aria-current={index === active}>
+                  <span className="why-row-rail" aria-hidden="true"><span className="why-row-dot" /></span>
+                  <span className="why-row-title">{reason.title}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div className="why-panels" aria-live="polite">
+            {reasons.map((reason, index) => {
+              const Icon = reason.icon;
+              return (
+                <div className={`why-panel${index === active ? " is-active" : ""}`} key={reason.title} aria-hidden={index !== active}>
+                  <span className="why-panel-icon"><Icon size={30} weight="light" aria-hidden="true" /></span>
+                  <h3>{reason.title}</h3>
+                  <p className="why-panel-body">{reason.body}</p>
+                </div>
+              );
+            })}
+          </div>
+        </Reveal>
       </div>
     </section>
   );

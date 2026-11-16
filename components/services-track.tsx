@@ -3,14 +3,14 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useMotionValueEvent, useScroll, useTransform } from "motion/react";
+import { Reveal } from "@/components/reveal";
 import { Globe, MagnifyingGlass, Megaphone, Robot, TerminalWindow } from "@phosphor-icons/react";
 
 const services = [
   {
     title: "System Software Development",
     icon: TerminalWindow,
-    summary: "Custom software that runs the business day: manage operations, automate repetitive work and give every team one place to look.",
-    detail: "We start from your actual workflow, not a template, then build the screens, roles and reports around it.",
+    summary: "Software that runs your daily operations in one place.",
     points: ["POS Systems", "CRM Systems", "ERP Solutions", "Business Management Software", "Custom SaaS Applications"],
     image: "/services/system-software-development.jpg",
     alt: "Abstract illustration of stacked modular panels interlocking into a structure, drawn in cyan line-work on a dark navy background.",
@@ -18,8 +18,7 @@ const services = [
   {
     title: "Website Development",
     icon: Globe,
-    summary: "Responsive, fast, modern websites that read well on every screen and turn visitors into enquiries.",
-    detail: "Design, build and launch, with the structure and metadata search engines need already in place.",
+    summary: "Fast websites that turn visitors into enquiries.",
     points: ["Business Websites", "E-commerce Websites", "Portfolio Websites", "Landing Pages", "Custom Web Applications"],
     image: "/services/website-development.jpg",
     alt: "Abstract illustration of translucent browser window frames floating in receding perspective, drawn in cyan line-work on a dark navy background.",
@@ -27,8 +26,7 @@ const services = [
   {
     title: "Social Media Marketing",
     icon: Megaphone,
-    summary: "Build a recognisable brand presence and reach the audience that is actually useful to your business.",
-    detail: "A clear content plan, consistent publishing and campaigns measured against enquiries, not vanity numbers.",
+    summary: "A recognisable brand, in front of the right people.",
     points: ["Social Media Management", "Content Strategy", "Social Media Campaigns", "Brand Awareness", "Digital Advertising"],
     image: "/services/social-media-marketing.jpg",
     alt: "Abstract illustration of a glowing hub sending out concentric ripples with small content cards orbiting along them, in cyan on a dark navy background.",
@@ -36,8 +34,7 @@ const services = [
   {
     title: "SEO Optimization",
     icon: MagnifyingGlass,
-    summary: "Improve visibility so the right people find you through search before they ever contact you.",
-    detail: "Technical health first, then the pages and content that answer what people are really searching for.",
+    summary: "Be found in search before they ever contact you.",
     points: ["On-Page SEO", "Technical SEO", "Keyword Research", "Website Optimization", "Content Optimization"],
     image: "/services/seo-optimization.jpg",
     alt: "Abstract illustration of a rising chart made of thin glowing strokes over contour lines, with a magnifying glass catching the light, in cyan on a dark navy background.",
@@ -45,8 +42,7 @@ const services = [
   {
     title: "AI Automation",
     icon: Robot,
-    summary: "Use artificial intelligence to take repetitive tasks off your team and keep the answer consistent.",
-    detail: "We automate the steps that are already well understood, so people spend time on the ones that are not.",
+    summary: "Repetitive work moved off your team, done the same way every time.",
     points: ["AI Chatbots", "Business Workflow Automation", "AI-Powered Tools", "Automated Customer Support", "Intelligent Business Processes"],
     image: "/services/ai-automation.jpg",
     alt: "Abstract illustration of curved neural pathways converging on a softly glowing core with streams of light particles, in cyan on a dark navy background.",
@@ -121,12 +117,11 @@ export function ServicesTrack() {
   return (
     <div className="services-track">
       <div className="page-wrap">
-        <div className="section-heading">
+        <Reveal className="section-heading">
           <p className="eyebrow"><span className="eyebrow-mark" /> Services</p>
           <h2 id="services-title">Solutions that move your <span>business forward.</span></h2>
-          <p>We provide innovative digital solutions designed to simplify operations, strengthen your online presence and accelerate business growth.</p>
-        </div>
-        <p className="services-hint">
+        </Reveal>
+        <Reveal className="services-hint" delay={0.1}>
           <span>Keep scrolling</span>
           <span className="services-hint-arrow" aria-hidden="true">
             <svg viewBox="0 0 44 8" width="44" height="8" fill="none" stroke="currentColor" strokeWidth="1.2">
@@ -134,7 +129,7 @@ export function ServicesTrack() {
             </svg>
           </span>
           <span>five services, one slide</span>
-        </p>
+        </Reveal>
       </div>
 
       <div className="service-pin" ref={pinRef}>
@@ -150,8 +145,9 @@ export function ServicesTrack() {
                       alt={service.alt}
                       width={1400}
                       height={800}
-                      sizes="(max-width: 820px) min(74vw, 340px), min(31vw, 420px)"
+                      sizes="(max-width: 820px) min(80vw, 380px), min(42vw, 600px)"
                       loading={index === 0 ? "eager" : "lazy"}
+                      quality={85}
                       decoding="async"
                     />
                     <span className="service-card-number">{String(index + 1).padStart(2, "0")}</span>
@@ -160,7 +156,6 @@ export function ServicesTrack() {
                     <span className="service-card-icon"><Icon size={22} weight="light" aria-hidden="true" /></span>
                     <h3>{service.title}</h3>
                     <p className="service-card-summary">{service.summary}</p>
-                    <p className="service-card-detail">{service.detail}</p>
                     <ul className="service-card-points">
                       {service.points.map((point) => <li key={point}>{point}</li>)}
                     </ul>
