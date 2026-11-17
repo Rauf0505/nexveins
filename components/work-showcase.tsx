@@ -1,53 +1,123 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
+import Image from "next/image";
+import { useRef } from "react";
+import { motion, useMotionTemplate, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
 
-const concepts = [
-  { name: "Meridian", category: "Fintech platform", tag: "01 / PRODUCT DESIGN", description: "A calmer way for modern teams to understand their money and make the next move.", field: "MERIDIAN / FINANCIAL CLARITY", shape: "meridian" },
-  { name: "Alto", category: "Digital health", tag: "02 / MOBILE PRODUCT", description: "A more considered daily companion for people navigating their own wellbeing.", field: "ALTO / CARE, IN CONTEXT", shape: "alto" },
-  { name: "Relay", category: "Operations software", tag: "03 / AI & AUTOMATION", description: "A connected operations layer that makes busy work feel a little less busy.", field: "RELAY / FLOW, RESTORED", shape: "relay" },
+type Project = {
+  name: string;
+  tags: string;
+  description: string;
+  image: string;
+  alt: string;
+  url: string;
+  host: string;
+};
+
+const projects: Project[] = [
+  {
+    name: "ServePilot",
+    tags: "SaaS • Point of Sale • Web",
+    description: "A restaurant management and POS platform that brings checkout, inventory, menu work, staff operations and reporting into one workspace.",
+    image: "/projects/servepilot.jpg",
+    alt: "ServePilot website: the headline “Run every service with confidence” beside a dashboard preview showing daily sales, orders and low stock.",
+    url: "https://nexveins.vercel.app/",
+    host: "nexveins.vercel.app",
+  },
+  {
+    name: "Arch ERP",
+    tags: "ERP • Construction & Interiors • Live demo",
+    description: "Business management for construction and interior projects — jobs, clients, cash in and out, labour, vendors and reports in one workspace, installable from the browser.",
+    image: "/projects/arch-erp.jpg",
+    alt: "Arch ERP dashboard: a dark sidebar listing projects, customers, cash in and out, labour, contractors and vendors, beside an Operations Overview with four summary cards, a cash flow chart and a budget panel.",
+    url: "https://arch-demo-inky.vercel.app/login",
+    host: "arch-demo-inky.vercel.app",
+  },
+  {
+    name: "German Fitness",
+    tags: "E-commerce • Gym • Web",
+    description: "A fitness and equipment storefront presenting training services, premium brands and product discovery for a gym audience.",
+    image: "/projects/german-fitness.jpg",
+    alt: "German Fitness website: a barbell photo behind the headline “Become Unstoppable”, with navigation for brands, products and services.",
+    url: "https://thegermanfitness.com/",
+    host: "thegermanfitness.com",
+  },
+  {
+    name: "RoyalCarHub",
+    tags: "Car Rental • Booking • Web",
+    description: "Premium car rental across 127+ locations in Pakistan — browse the fleet by city and class, then book through WhatsApp or the enquiry form.",
+    image: "/projects/royalcarhub.jpg",
+    alt: "RoyalCarHub homepage: the headline “Premium Car Rental in Pakistan” over a dark street scene with a luxury car, a red Browse Cars button and navigation for All Cars, Categories and Cities.",
+    url: "https://royalcarhub.com/",
+    host: "royalcarhub.com",
+  },
 ];
 
 export function WorkShowcase() {
-  const [selected, setSelected] = useState(0);
-  const reduced = useReducedMotion();
-  const project = concepts[selected];
-
-  const change = (direction: number) => setSelected((current) => (current + direction + concepts.length) % concepts.length);
+  const rows: { start: number; items: Project[] }[] = [];
+  for (let start = 0; start < projects.length; start += 2) rows.push({ start, items: projects.slice(start, start + 2) });
 
   return (
-    <div className="work-showcase">
-      <div className={`project-art ${project.shape}`} aria-label={`${project.name} concept artwork`}>
-        <AnimatePresence mode="wait">
-          <motion.div key={project.shape} className="artwork-scene" initial={reduced ? false : { opacity: 0, scale: 0.96, rotate: -2 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} exit={reduced ? undefined : { opacity: 0, scale: 1.02, rotate: 2 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}>
-            {project.shape === "meridian" && <><div className="meridian-disc" /><div className="meridian-ring ring-one" /><div className="meridian-ring ring-two" /><div className="meridian-cross" /><span className="artword">m.</span></>}
-            {project.shape === "alto" && <><div className="alto-sun" /><div className="alto-horizon" /><div className="alto-arc arc-a" /><div className="alto-arc arc-b" /><span className="artword alto-word">a</span></>}
-            {project.shape === "relay" && <><div className="relay-core" /><div className="relay-path path-a" /><div className="relay-path path-b" /><div className="relay-path path-c" /><div className="relay-node relay-node-a" /><div className="relay-node relay-node-b" /><div className="relay-node relay-node-c" /><span className="artword relay-word">R</span></>}
-          </motion.div>
-        </AnimatePresence>
-        <div className="project-art-top"><span>CONCEPT / {String(selected + 1).padStart(2, "0")}</span><span>NX STUDIO</span></div>
-        <div className="project-art-foot">{project.field}</div>
-      </div>
-      <div className="project-detail" aria-live="polite" aria-atomic="true">
-        <div className="project-detail-top"><span className="project-tag">{project.tag}</span><span className="project-category">{project.category}</span></div>
-        <div className="project-detail-main">
-          <AnimatePresence mode="wait">
-            <motion.div key={project.name} initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={reduced ? undefined : { opacity: 0, y: -10 }} transition={{ duration: 0.25 }}>
-              <h3>{project.name}<span>.</span></h3>
-              <p>{project.description}</p>
-            </motion.div>
-          </AnimatePresence>
-          <button className="circle-link" type="button" aria-label="Move to next concept" onClick={() => change(1)}><ArrowUpRight size={20} weight="bold" aria-hidden="true" /></button>
-        </div>
-        <div className="project-controls">
-          <div className="project-tabs" role="group" aria-label="Choose concept project">
-            {concepts.map((item, index) => <button key={item.name} type="button" className={index === selected ? "is-selected" : ""} aria-pressed={index === selected} onClick={() => setSelected(index)}>{item.name}</button>)}
-          </div>
-          <div className="project-arrows"><button type="button" aria-label="Previous concept" onClick={() => change(-1)}><ArrowLeft size={17} /></button><button type="button" aria-label="Next concept" onClick={() => change(1)}><ArrowRight size={17} /></button></div>
-        </div>
-      </div>
+    <div className="project-stack">
+      {rows.map((row) => (
+        <ProjectRow key={row.start} items={row.items} start={row.start} />
+      ))}
     </div>
+  );
+}
+
+function ProjectRow({ items, start }: { items: Project[]; start: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  /* One reading for the row, shared by both plates, so the pair always opens on
+     the same beat. Measuring each plate separately would let the taller one
+     finish later than its neighbour. */
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
+
+  return (
+    <div className="project-row" ref={ref}>
+      {items.map((project, offset) => (
+        <ProjectPlate key={project.name} project={project} number={start + offset + 1} progress={scrollYProgress} />
+      ))}
+    </div>
+  );
+}
+
+function ProjectPlate({ project, number, progress }: { project: Project; number: number; progress: MotionValue<number> }) {
+  const still = useReducedMotion() === true;
+
+  /* The shot is unveiled from its top edge down and settles from a slight
+     over-crop, so scrolling back closes it again. Progress runs from the row's
+     top edge appearing at the bottom of the screen until the row sits in the
+     middle of it. */
+  const curtain = useTransform(progress, [0, 0.72], [100, 0]);
+  const clip = useMotionTemplate`inset(0% 0% ${curtain}% 0%)`;
+  const zoom = useTransform(progress, [0, 1], [1.14, 1]);
+  const textY = useTransform(progress, [0.1, 0.94], [26, 0]);
+  const textOpacity = useTransform(progress, [0.08, 0.6], [0, 1]);
+
+  return (
+    <article className="project-plate">
+      <div className="plate-media">
+        <motion.div className="plate-shot" style={still ? undefined : { clipPath: clip, scale: zoom }}>
+          <Image src={project.image} alt={project.alt} width={1400} height={933} sizes="(max-width: 760px) 92vw, (max-width: 1100px) 84vw, 41vw" loading={number === 1 ? "eager" : "lazy"} decoding="async" />
+        </motion.div>
+      </div>
+
+      <motion.div className="plate-meta" style={still ? undefined : { y: textY, opacity: textOpacity }}>
+        <p className="plate-tags">{project.tags}</p>
+        <div className="plate-name">
+          <span className="plate-arrow" aria-hidden="true"><ArrowRight size={22} weight="light" /></span>
+          <h3>{project.name}</h3>
+        </div>
+        <div className="plate-foot">
+          <p className="plate-note">{project.description}</p>
+          <a className="plate-link" href={project.url} target="_blank" rel="noopener noreferrer">
+            {project.host} <ArrowUpRight size={15} weight="bold" aria-hidden="true" />
+          </a>
+        </div>
+      </motion.div>
+    </article>
   );
 }

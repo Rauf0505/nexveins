@@ -2,6 +2,13 @@ import { SiteNav } from "@/components/site-nav";
 import { HeroVisual } from "@/components/hero-visual";
 import { HeroActions } from "@/components/hero-actions";
 import { Reveal } from "@/components/reveal";
+import { AboutSection } from "@/components/about-section";
+import { ServicesTrack } from "@/components/services-track";
+import { WhySection } from "@/components/why-section";
+import { WorkShowcase } from "@/components/work-showcase";
+import { ProcessSection } from "@/components/process-section";
+import { ContactSection } from "@/components/contact-section";
+import { SiteFooter } from "@/components/site-footer";
 
 export default function Home() {
   return (
@@ -32,7 +39,32 @@ export default function Home() {
           </Reveal>
         </section>
 
+        <AboutSection />
+
+        <section className="services-section" id="services" aria-labelledby="services-title">
+          <ServicesTrack />
+        </section>
+
+        <WhySection />
+
+        <section className="work-section" id="work" aria-labelledby="work-title">
+          <div className="work-inner page-wrap">
+            <Reveal className="work-heading">
+              <div>
+                <p className="eyebrow"><span className="eyebrow-mark" /> Selected work</p>
+                <h2 id="work-title">Selected work. <span>Real solutions.</span></h2>
+              </div>
+            </Reveal>
+            <WorkShowcase />
+          </div>
+        </section>
+
+        <ProcessSection />
+
+        <ContactSection />
       </main>
+
+      <SiteFooter />
     </>
   );
 }
