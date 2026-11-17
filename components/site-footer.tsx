@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { ArrowUp } from "@phosphor-icons/react";
+import { ArrowUp, FacebookLogo, InstagramLogo, LinkedinLogo, TiktokLogo } from "@phosphor-icons/react";
 
 const navigate = [
   { label: "Home", href: "#top" },
@@ -18,6 +18,13 @@ const services = [
   "AI Automation",
 ];
 
+const socials = [
+  { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61594916004272", Icon: FacebookLogo },
+  { label: "Instagram", href: "https://www.instagram.com/nexveins/", Icon: InstagramLogo },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/nex-veins/", Icon: LinkedinLogo },
+  { label: "TikTok", href: "https://www.tiktok.com/@nexveins", Icon: TiktokLogo },
+];
+
 export function SiteFooter() {
   return (
     <footer className="footer-shell" aria-label="Site footer">
@@ -28,6 +35,15 @@ export function SiteFooter() {
             <Image className="wordmark-image footer-wordmark-image" src="/nexveins-wordmark.png" width={1016} height={146} alt="" />
           </a>
           <p>NexVeins builds innovative digital solutions that help businesses grow, operate smarter and succeed in the digital world.</p>
+          <ul className="footer-socials" aria-label="NexVeins on social media">
+            {socials.map(({ label, href, Icon }) => (
+              <li key={label}>
+                <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+                  <Icon size={17} weight="fill" aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="footer-columns">

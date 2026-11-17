@@ -7,7 +7,6 @@ import { ServicesTrack } from "@/components/services-track";
 import { WhySection } from "@/components/why-section";
 import { WorkShowcase } from "@/components/work-showcase";
 import { ProcessSection } from "@/components/process-section";
-import { CtaBand } from "@/components/cta-band";
 import { ContactSection } from "@/components/contact-section";
 import { SiteFooter } from "@/components/site-footer";
 
@@ -61,8 +60,6 @@ export default function Home() {
         </section>
 
         <ProcessSection />
-
-        <CtaBand />
 
         <ContactSection />
       </main>

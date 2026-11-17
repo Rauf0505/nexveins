@@ -99,7 +99,7 @@ export function ContactForm() {
 
       <div className="field-group">
         <label htmlFor="contact-details">Project details</label>
-        <textarea id="contact-details" name="details" rows={4} required value={values.details} onChange={(event) => update("details", event.target.value)} aria-invalid={Boolean(errors.details)} aria-describedby={errors.details ? "details-error" : "details-hint"} placeholder="What are you building, and what should it do?" />
+        <textarea id="contact-details" name="details" rows={2} required value={values.details} onChange={(event) => update("details", event.target.value)} aria-invalid={Boolean(errors.details)} aria-describedby={errors.details ? "details-error" : "details-hint"} placeholder="What are you building, and what should it do?" />
         {errors.details ? <p className="field-error" id="details-error">{errors.details}</p> : <p className="field-hint" id="details-hint">The more context you give, the sharper our first reply.</p>}
       </div>
 

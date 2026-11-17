@@ -11,8 +11,8 @@ type Project = {
   description: string;
   image: string;
   alt: string;
-  url?: string;
-  host?: string;
+  url: string;
+  host: string;
 };
 
 const projects: Project[] = [
@@ -26,11 +26,13 @@ const projects: Project[] = [
     host: "nexveins.vercel.app",
   },
   {
-    name: "Loom Ledger",
-    tags: "ERP • Textile Trade • Concept",
-    description: "Order, lot and dispatch tracking for a weaving export house — one ledger that follows the yarn from intake to the container door.",
-    image: "/projects/loom-ledger.jpg",
-    alt: "Dark office wall screen showing an abstract enterprise dashboard with cyan charts, data panels and a shipment map.",
+    name: "Arch ERP",
+    tags: "ERP • Construction & Interiors • Live demo",
+    description: "Business management for construction and interior projects — jobs, clients, cash in and out, labour, vendors and reports in one workspace, installable from the browser.",
+    image: "/projects/arch-erp.jpg",
+    alt: "Arch ERP dashboard: a dark sidebar listing projects, customers, cash in and out, labour, contractors and vendors, beside an Operations Overview with four summary cards, a cash flow chart and a budget panel.",
+    url: "https://arch-demo-inky.vercel.app/login",
+    host: "arch-demo-inky.vercel.app",
   },
   {
     name: "German Fitness",
@@ -42,25 +44,13 @@ const projects: Project[] = [
     host: "thegermanfitness.com",
   },
   {
-    name: "Transit Grid",
-    tags: "Logistics • Control Tower • Concept",
-    description: "Live ETAs, driver check-ins and load planning on a single board, so the dispatch desk stops working the phone.",
-    image: "/projects/transit-grid.jpg",
-    alt: "Night freight yard from above with a translucent cyan route map overlaid across containers and trucks.",
-  },
-  {
-    name: "Clinic Flow",
-    tags: "Healthcare • Booking • Concept",
-    description: "Appointments, patient records and reminders for a multi-doctor clinic, built around the front desk rather than the other way round.",
-    image: "/projects/clinic-flow.jpg",
-    alt: "Dim clinic reception with a tablet on the counter showing an abstract appointment calendar in glowing cyan blocks.",
-  },
-  {
-    name: "Paper Mind",
-    tags: "AI • Documents • Concept",
-    description: "Search, summarise and draft from your own contracts and quotes, with the answer kept inside the paperwork you actually signed.",
-    image: "/projects/paper-mind.jpg",
-    alt: "Floating translucent glass panels in a dark void, each holding blurred lines and cyan highlights joined by fine light threads.",
+    name: "RoyalCarHub",
+    tags: "Car Rental • Booking • Web",
+    description: "Premium car rental across 127+ locations in Pakistan — browse the fleet by city and class, then book through WhatsApp or the enquiry form.",
+    image: "/projects/royalcarhub.jpg",
+    alt: "RoyalCarHub homepage: the headline “Premium Car Rental in Pakistan” over a dark street scene with a luxury car, a red Browse Cars button and navigation for All Cars, Categories and Cities.",
+    url: "https://royalcarhub.com/",
+    host: "royalcarhub.com",
   },
 ];
 
@@ -123,13 +113,9 @@ function ProjectPlate({ project, number, progress }: { project: Project; number:
         </div>
         <div className="plate-foot">
           <p className="plate-note">{project.description}</p>
-          {project.url ? (
-            <a className="plate-link" href={project.url} target="_blank" rel="noopener noreferrer">
-              {project.host} <ArrowUpRight size={15} weight="bold" aria-hidden="true" />
-            </a>
-          ) : (
-            <span className="plate-demo">Demo build</span>
-          )}
+          <a className="plate-link" href={project.url} target="_blank" rel="noopener noreferrer">
+            {project.host} <ArrowUpRight size={15} weight="bold" aria-hidden="true" />
+          </a>
         </div>
       </motion.div>
     </article>

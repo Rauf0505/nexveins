@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowUpRight, List, X } from "@phosphor-icons/react";
 import { useEffect, useState, type PointerEvent } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useEnquiry } from "@/components/enquiry-dialog";
 
 const links = [
   { label: "Home", href: "#top" },
@@ -16,6 +17,7 @@ const links = [
 const sectionIds = ["top", "about", "services", "work", "contact"];
 
 export function SiteNav() {
+  const openEnquiry = useEnquiry();
   const [menuOpen, setMenuOpen] = useState(false);
   const [stuck, setStuck] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -99,13 +101,13 @@ export function SiteNav() {
           {links.map((link) => (
             <a key={link.href} href={link.href} className={link.href.slice(1) === active ? "is-active" : undefined} aria-current={link.href.slice(1) === active ? "true" : undefined} onClick={closeMenu}>{link.label}</a>
           ))}
-          <a className="nav-contact nav-contact-mobile" href="#contact" onClick={closeMenu}>
+          <a className="nav-contact nav-contact-mobile" href="#contact" aria-haspopup="dialog" onClick={(event) => { event.preventDefault(); closeMenu(); openEnquiry(); }}>
             Start a project <ArrowUpRight size={15} weight="bold" aria-hidden="true" />
           </a>
         </nav>
 
         <div className="nav-end">
-          <a className="nav-contact nav-contact-desktop" href="#contact">
+          <a className="nav-contact nav-contact-desktop" href="#contact" aria-haspopup="dialog" onClick={(event) => { event.preventDefault(); openEnquiry(); }}>
             Start a project <ArrowUpRight size={15} weight="bold" aria-hidden="true" />
           </a>
           <ThemeToggle />
