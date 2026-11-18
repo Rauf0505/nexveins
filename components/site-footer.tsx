@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { ArrowUp, FacebookLogo, InstagramLogo, LinkedinLogo, TiktokLogo } from "@phosphor-icons/react";
+import { ArrowUp, FacebookLogo, InstagramLogo, LinkedinLogo, WhatsappLogo } from "@phosphor-icons/react";
 
 const navigate = [
   { label: "Home", href: "#top" },
@@ -19,10 +19,10 @@ const services = [
 ];
 
 const socials = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/nex-veins/", Icon: LinkedinLogo },
   { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61594916004272", Icon: FacebookLogo },
   { label: "Instagram", href: "https://www.instagram.com/nexveins/", Icon: InstagramLogo },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/nex-veins/", Icon: LinkedinLogo },
-  { label: "TikTok", href: "https://www.tiktok.com/@nexveins", Icon: TiktokLogo },
+  { label: "WhatsApp", href: "https://wa.me/923193360773", Icon: WhatsappLogo },
 ];
 
 export function SiteFooter() {
@@ -31,8 +31,7 @@ export function SiteFooter() {
       <div className="site-footer page-wrap">
         <div className="footer-brand">
           <a className="wordmark footer-wordmark" href="#top" aria-label="NexVeins home">
-            <Image className="wordmark-emblem" src="/nexveins-emblem.png" width={640} height={500} alt="" />
-            <Image className="wordmark-image footer-wordmark-image" src="/nexveins-wordmark.png" width={1016} height={146} alt="" />
+            <Image className="wordmark-emblem" src="/nexveins-emblem.png" width={560} height={423} alt="" />
           </a>
           <p>NexVeins builds innovative digital solutions that help businesses grow, operate smarter and succeed in the digital world.</p>
           <ul className="footer-socials" aria-label="NexVeins on social media">

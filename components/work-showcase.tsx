@@ -99,11 +99,14 @@ function ProjectPlate({ project, number, progress }: { project: Project; number:
 
   return (
     <article className="project-plate">
-      <div className="plate-media">
-        <motion.div className="plate-shot" style={still ? undefined : { clipPath: clip, scale: zoom }}>
-          <Image src={project.image} alt={project.alt} width={1400} height={933} sizes="(max-width: 760px) 92vw, (max-width: 1100px) 84vw, 41vw" loading={number === 1 ? "eager" : "lazy"} decoding="async" />
-        </motion.div>
-      </div>
+      <a className="plate-media-link" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.name} on ${project.host}`}>
+        <div className="plate-media">
+          <motion.div className="plate-shot" style={still ? undefined : { clipPath: clip, scale: zoom }}>
+            <Image src={project.image} alt={project.alt} width={1400} height={933} sizes="(max-width: 760px) 84vw, (max-width: 1100px) 84vw, 41vw" loading={number === 1 ? "eager" : "lazy"} decoding="async" />
+          </motion.div>
+          <span className="plate-open" aria-hidden="true"><ArrowUpRight size={20} weight="bold" /></span>
+        </div>
+      </a>
 
       <motion.div className="plate-meta" style={still ? undefined : { y: textY, opacity: textOpacity }}>
         <p className="plate-tags">{project.tags}</p>
@@ -111,12 +114,7 @@ function ProjectPlate({ project, number, progress }: { project: Project; number:
           <span className="plate-arrow" aria-hidden="true"><ArrowRight size={22} weight="light" /></span>
           <h3>{project.name}</h3>
         </div>
-        <div className="plate-foot">
-          <p className="plate-note">{project.description}</p>
-          <a className="plate-link" href={project.url} target="_blank" rel="noopener noreferrer">
-            {project.host} <ArrowUpRight size={15} weight="bold" aria-hidden="true" />
-          </a>
-        </div>
+        <p className="plate-note">{project.description}</p>
       </motion.div>
     </article>
   );

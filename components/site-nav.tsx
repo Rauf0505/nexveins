@@ -28,8 +28,13 @@ export function SiteNav() {
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setMenuOpen(false);
     };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
+    return () => {
+      window.removeEventListener("keydown", closeOnEscape);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [menuOpen]);
 
   useEffect(() => {
@@ -93,8 +98,7 @@ export function SiteNav() {
       >
         <span className="nav-glass-ripple" aria-hidden="true" />
         <a className="wordmark" href="#top" aria-label="Nexveins home" onClick={closeMenu}>
-          <Image className="wordmark-emblem" src="/nexveins-emblem.png" width={640} height={500} alt="" priority />
-          <Image className="wordmark-image" src="/nexveins-wordmark.png" width={1016} height={146} alt="" priority />
+          <Image className="wordmark-emblem" src="/nexveins-emblem.png" width={560} height={423} alt="" priority />
         </a>
 
         <nav id="primary-navigation" className={`primary-nav${menuOpen ? " is-open" : ""}`} aria-label="Main navigation">
