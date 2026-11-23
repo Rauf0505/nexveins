@@ -60,8 +60,10 @@ const services = [
   },
 ];
 
-/* How far above the bottom edge the cards rest while they travel. The same
-   number is handed to the sticky rule, so the two cannot drift apart. */
+/* The least distance between the cards and the bottom edge while they travel —
+   the frame may stop a little higher so the heading never rests cut off in the
+   middle of a line. The number is handed to the sticky rule as a CSS variable,
+   so the two cannot drift apart. */
 const HOLD_GAP = 90;
 
 export function ServicesTrack() {
@@ -69,6 +71,9 @@ export function ServicesTrack() {
   const frameRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
+  /* Whether the hold is live right now. The swipe fallback keys off this, so the
+     two paths can never both claim the row. */
+  const heldRef = useRef(false);
   const travelValue = useMotionValue(0);
   /* Both ends of the sideways window are measured, not guessed. It opens the
      moment the cards stop being cropped on the way in, so the block arrives
@@ -76,16 +81,17 @@ export function ServicesTrack() {
      fold for exactly as far as the row has to move. */
   const anchorValue = useMotionValue(0);
   const spanValue = useMotionValue(1);
-  const [hold, setHold] = useState({ travel: 0, block: 0 });
+  const [hold, setHold] = useState({ travel: 0, block: 0, gap: HOLD_GAP });
   const [framed, setFramed] = useState(false);
   const [focusIndex, setFocusIndex] = useState(0);
   const { scrollY } = useScroll();
   const slideAt = (y: number) => Math.min(1, Math.max(0, (y - anchorValue.get()) / spanValue.get()));
   const x = useTransform([scrollY, anchorValue, spanValue, travelValue], ([y, anchor, span, distance]: number[]) => -Math.min(1, Math.max(0, (y - anchor) / span)) * distance);
 
-  /* The pinned slide only runs on desktop with motion allowed; otherwise the
-     row is a native swipe container and the focus has to be measured instead. */
-  const isPinned = () => window.matchMedia("(min-width: 821px) and (prefers-reduced-motion: no-preference)").matches;
+  /* The pinned slide runs at every width now — a phone holds for as many pixels
+     as its row is wide, the same beat the desktop plays. Only reduced motion
+     takes the row back to a native swipe container. */
+  const isPinned = () => window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
   useEffect(() => {
     const pin = pinRef.current;
@@ -98,13 +104,49 @@ export function ServicesTrack() {
          right corner when the hold closes. */
       const distance = Math.max(0, row.scrollWidth - stage.clientWidth);
       const block = frame.offsetHeight;
+      const viewport = window.innerHeight;
+      /* The heading's line boxes, measured against the top of the frame, so the
+         hold can stop on the edge of a line rather than halfway through one. */
+      const lines: number[][] = [];
+      const frameTop = frame.getBoundingClientRect().top;
+      /* The heading arrives by rising 26px, so its rendered boxes sit that far
+         below where they will rest while the hold is read. Layout, not the
+         animation's offset, is what the top edge has to line up with. */
+      const heading = frame.querySelector<HTMLElement>(".section-heading");
+      const arriving = heading ? getComputedStyle(heading).transform : "none";
+      const rise = arriving === "none" ? 0 : new DOMMatrixReadOnly(arriving).f;
+      frame.querySelectorAll(".eyebrow, .section-heading h2, .services-lead").forEach((el) => {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        Array.from(range.getClientRects()).forEach((r) => {
+          if (r.height > 4) lines.push([r.top - rise - frameTop, r.bottom - rise - frameTop]);
+        });
+      });
+      /* Where the top of the screen falls inside the frame once the cards have
+         stopped a hand's width above the bottom edge — pushed down to the next
+         line edge, which is the extra the frame has to rise before it holds. */
+      const rawEdge = Math.max(0, block + HOLD_GAP - viewport);
+      let edge = rawEdge;
+      let straddled = true;
+      while (straddled) {
+        straddled = false;
+        const cut = lines.find(([a, b]) => a < edge && edge < b);
+        if (cut && cut[1] > edge) {
+          edge = cut[1];
+          straddled = true;
+        }
+      }
+      const gap = HOLD_GAP + edge - rawEdge;
+      /* A phone turned sideways is shorter than one card, and the hold pins the
+         frame by its bottom edge — so the tops would be cut off and stay cut for
+         the whole travel. Too tall for the screen, and the row swipes instead. */
+      const fits = row.offsetHeight <= viewport - gap;
       travelValue.set(distance);
-      /* The frame holds with the cards sitting low-centre — a hand's width clear of
-         the bottom edge — and that is where the slide opens. */
-      anchorValue.set(pin.getBoundingClientRect().top + window.scrollY + block + HOLD_GAP - window.innerHeight);
+      anchorValue.set(pin.getBoundingClientRect().top + window.scrollY + block + gap - viewport);
       spanValue.set(distance || 1);
-      const travel = isPinned() && distance > 0 ? distance : 0;
-      setHold((current) => (current.travel === travel && current.block === block ? current : { travel, block }));
+      const travel = isPinned() && distance > 0 && fits ? distance : 0;
+      heldRef.current = travel > 0;
+      setHold((current) => (current.travel === travel && current.block === block && current.gap === gap ? current : { travel, block, gap }));
     };
     measure();
     /* The hold opens at a fixed point of the page, so that point is re-read
@@ -119,7 +161,7 @@ export function ServicesTrack() {
   }, [travelValue, anchorValue, spanValue]);
 
   useMotionValueEvent(scrollY, "change", (y) => {
-    if (!isPinned()) return;
+    if (!heldRef.current) return;
     setFramed(y >= anchorValue.get());
     const last = services.length - 1;
     setFocusIndex(Math.min(last, Math.max(0, Math.round(slideAt(y) * last))));
@@ -133,10 +175,10 @@ export function ServicesTrack() {
     let frame = 0;
     const settle = () => {
       frame = 0;
-      if (isPinned()) return;
+      if (heldRef.current) return;
       /* Nothing is waiting on a scroll window here: the row swipes itself, and the
          section spends no extra height on a hold it cannot use. */
-      setHold((current) => (current.travel === 0 && current.block === 0 ? current : { travel: 0, block: 0 }));
+      setHold((current) => (current.travel === 0 && current.block === 0 ? current : { travel: 0, block: 0, gap: HOLD_GAP }));
       setFramed(true);
       const centre = stage.getBoundingClientRect().left + stage.clientWidth / 2;
       let closest = Number.POSITIVE_INFINITY;
@@ -172,7 +214,7 @@ export function ServicesTrack() {
         <div
           className={`service-frame${hold.travel > 0 ? " is-held" : ""}`}
           ref={frameRef}
-          style={{ "--block-h": `${hold.block}px`, "--hold-gap": `${HOLD_GAP}px` } as CSSProperties}
+          style={{ "--block-h": `${hold.block}px`, "--hold-gap": `${hold.gap}px` } as CSSProperties}
         >
           <div className="page-wrap">
             <Reveal className="section-heading">
