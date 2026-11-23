@@ -148,44 +148,46 @@ button { color: inherit; }
    height and the wrap width is scaled by the same ratio, so headings occupy the
    space they did before and nothing below them moves. */
 .section-heading h2, .work-heading h2, .approach-lead h2, .contact-copy h2 { font-size: clamp(44px, 4.6vw, 64px); line-height: clamp(50.4px, 6.01vw, 83.4px); max-width: 74.5%; }
+/* The lead sits in the heading grid's own row, so the row gap is clawed back with
+   a negative margin and the heading keeps the position it had without it. */
+.services-lead { grid-column: 1 / -1; max-width: 46ch; margin: -16px 0 0; color: var(--editorial-muted); font-size: 16.5px; line-height: 1.6; }
 .services-track { padding-block: 96px 62px; }
-.services-hint { display: flex; align-items: center; gap: 14px; margin: -30px 0 44px; color: var(--muted); font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
-.services-hint-arrow { display: inline-flex; color: var(--accent); }
-/* The pin owns the scroll distance; the stage locks to the viewport while the
-   row is translated sideways by JS (see services-track.tsx). */
-.service-pin { position: relative; height: 320vh; }
-.service-stage { position: sticky; top: 0; display: flex; align-items: center; height: 100vh; overflow: hidden; }
-.service-row { display: flex; flex-shrink: 0; gap: clamp(16px, 2.2vw, 30px); padding-inline: max(48px, calc((100vw - 1320px) / 2 + 48px)); will-change: transform; }
-.service-card { position: relative; display: flex; flex: none; flex-direction: column; width: clamp(300px, 33vw, 460px); max-height: 88vh; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 16px; background: var(--ink-raised); transition: border-color .3s ease; }
+/* The sideways slide is paid for by the section itself. The frame holds with the
+   cards low-centre — a hand's width clear of the bottom edge — and stays put for
+   exactly the width the row has to travel, so while the cards move the page does
+   not; the block only carries on up once the last card has landed. The extra
+   height stays behind the held frame, so the only space under the cards is the
+   gap they stop at. */
+.service-pin { position: relative; }
+.service-frame.is-held { position: sticky; top: calc(100vh - var(--block-h, 100%) - var(--hold-gap, 0px)); }
+.service-stage { overflow: hidden; }
+.service-row { display: flex; width: max-content; gap: clamp(16px, 2.2vw, 30px); padding-inline: max(48px, calc((100vw - 1320px) / 2 + 48px)); will-change: transform; }
+.service-card { position: relative; display: flex; flex: none; flex-direction: column; width: clamp(300px, 33vw, 460px); max-height: 88vh; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 16px; background: var(--ink-raised); transition: border-color .3s ease, transform .3s var(--curve), box-shadow .3s ease; }
 .service-card:hover, .service-card.is-focus { border-color: color-mix(in srgb, var(--accent) 42%, var(--line-strong)); }
-.service-card-media { position: relative; flex: none; aspect-ratio: 3 / 2; overflow: hidden; background: var(--ink-soft); }
-.service-card-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 44%; transform: scale(1.05); transition: transform 1.4s var(--curve); }
-/* Only the card the slide has landed on holds the hover state; the one it hands
-   off to is released, so its image climbs back to the resting crop. */
-.service-card.is-focus .service-card-media img { transform: scale(1); }
-.service-card-number { position: absolute; top: 0; left: 0; z-index: 1; padding: 9px 13px; background: var(--ink-raised); color: var(--muted); font: 500 11px/1 var(--font-mono); letter-spacing: .1em; border-bottom-right-radius: 12px; }
-.service-card-body { display: flex; flex: 1; flex-direction: column; gap: 12px; min-height: 0; padding: 20px 21px 22px; }
+/* The pointer only takes over once the cards are whole on screen: a hovered card
+   lifts the way the work plates and the contact cards do. */
+.service-row.is-framed .service-card:hover { transform: translateY(-6px); box-shadow: 0 22px 46px rgb(2 8 20 / 20%); }
+/* Each card shows its whole picture: the media box takes the ratio of the file
+   it holds, handed in per card, so nothing is cropped away. */
+.service-card-media { position: relative; flex: none; aspect-ratio: var(--media-ratio, 7 / 4); overflow: hidden; background: var(--ink-soft); }
+.service-card-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.service-card-body { display: flex; flex: 1; flex-direction: column; gap: 12px; min-height: 0; padding: 22px; }
 .service-card-icon { color: var(--accent); }
 .service-card-body h3 { margin: 0; font-size: 23px; font-weight: 620; letter-spacing: -.032em; }
 .service-card-summary { margin: 0; color: var(--muted); font-size: 16.5px; line-height: 1.55; }
+/* The whole card is the link: an invisible layer over the picture and the text,
+   so clicking anywhere opens that service. */
+.service-card-link { position: absolute; inset: 0; z-index: 2; border-radius: 16px; }
+.service-card-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+/* Chips on the services index rows (components/services-content.tsx). */
 .service-card-points { display: flex; flex-wrap: wrap; align-content: start; gap: 7px; margin: auto 0 0; padding: 16px 0 0; list-style: none; }
 .service-card-points li { padding: 7px 11px; border: 1px solid var(--line-strong); border-radius: 10px; color: var(--paper); font: 500 11px/1 var(--font-mono); letter-spacing: .02em; }
-/* Phones and reduced motion: no pinning, no translation — a native swipe instead. */
+/* Phones and reduced motion: no drift, no translation — a native swipe instead. */
 @media (max-width: 820px), (prefers-reduced-motion: reduce) {
-  .service-pin { height: auto; }
-  .service-stage { position: static; height: auto; padding-block: 4px; }
-  .service-row { flex-shrink: 1; width: max-content; overflow-x: auto; scroll-snap-type: x mandatory; padding-inline: 24px; padding-bottom: 18px; transform: none !important; scrollbar-width: none; }
+  .service-stage { padding-block: 4px; }
+  .service-row { width: max-content; overflow-x: auto; scroll-snap-type: x mandatory; padding-inline: 24px; padding-bottom: 18px; transform: none !important; scrollbar-width: none; }
   .service-row::-webkit-scrollbar { display: none; }
   .service-card { width: clamp(240px, 74vw, 340px); max-height: none; scroll-snap-align: center; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .service-card-media img { transform: none; }
-}
-/* Short laptop windows: with the taller crop the tags would fall below the
-   card's height cap, so there the picture gives back some of its height. */
-@media (min-width: 821px) and (max-height: 780px) {
-  .service-card { width: clamp(280px, 28vw, 380px); }
-  .service-card-media { aspect-ratio: 16 / 9; }
 }
 
 .work-section { background: var(--ink-soft); border-block: 1px solid var(--line); }
@@ -194,10 +196,14 @@ button { color: inherit; }
 .work-heading .eyebrow { margin-bottom: 23px; }
 /* Holds the width the heading had while the intro sentence sat beside it, so its line breaks survive the removal. */
 .work-heading > div { max-width: calc(100% - 390px - 4%); }
-/* Two plates per row. Each plate is unveiled from its top edge down as it
-   enters and its text rises after it, both driven by the scroll position
-   rather than timed (see work-showcase.tsx). */
+/* Two plates per row. Each pair rises to the middle of the screen and stops
+   there for exactly its own height of scroll while the shots are unveiled from
+   their top edges down and the text rises after them — the same beat, now
+   played in place instead of on the way up (see work-showcase.tsx). The extra
+   height sits behind the held row, so nothing empty ever shows. */
 .project-stack { display: flex; flex-direction: column; gap: clamp(54px, 6.5vw, 112px); }
+.project-pin { position: relative; }
+.project-row.is-held { position: sticky; top: var(--hold-top, 0px); }
 .project-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(26px, 3.4vw, 54px); }
 .project-plate { display: grid; gap: 18px; }
 .plate-media-link { display: block; }
@@ -361,6 +367,19 @@ button { color: inherit; }
 .back-top svg { color: var(--accent); }
 .copyright { grid-column: 1 / -1; padding-top: 22px; border-top: 1px solid var(--line); color: var(--muted); font: 11px var(--font-mono); letter-spacing: .06em; }
 
+/* Floating scroll-to-top. Sits under .site-header (z-index 10) on purpose: the
+   open mobile menu is a descendant of the header, so it covers this button
+   instead of the button floating over the menu. */
+.scroll-top { position: fixed; right: calc(20px + env(safe-area-inset-right)); bottom: calc(22px + env(safe-area-inset-bottom)); z-index: 5; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 0; border-radius: 50%; background: var(--ink-raised); color: var(--paper); box-shadow: 0 12px 30px rgb(2 8 20 / 42%); cursor: pointer; opacity: 0; transform: translateY(14px) scale(.92); pointer-events: none; transition: opacity .3s ease, transform .38s var(--curve), background .25s ease, color .25s ease; }
+.scroll-top.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.scroll-top svg:not(.scroll-top-ring) { position: relative; z-index: 1; }
+.scroll-top-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.scroll-top-ring circle { fill: none; stroke-width: 5; }
+.scroll-top-track { stroke: var(--line-strong); }
+.scroll-top-fill { stroke: var(--accent); }
+.scroll-top:hover { background: color-mix(in srgb, var(--accent) 24%, var(--ink-raised)); color: var(--accent); }
+.scroll-top:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
 @media (max-width: 1020px) {
   .page-wrap { width: min(100% - 56px, 1320px); }
   .site-header { width: min(100% - 48px, 1080px); }
@@ -431,14 +450,15 @@ button { color: inherit; }
   .section-heading { display: block; margin-bottom: 32px; }
   .section-heading .eyebrow { margin-bottom: 22px; }
   .section-heading h2, .work-heading h2, .approach-lead h2, .contact-copy h2 { font-size: clamp(40px, 8.4vw, 56px); line-height: clamp(48.5px, 10.185vw, 67.9px); max-width: 80%; }
+  /* Stacked here, not gridded — the claw-back margin above is a grid value. */
+  .services-lead { max-width: 40ch; margin: 24px 0 0; font-size: 15.5px; }
   .services-track { padding-block: 58px 42px; }
-  .services-hint { margin: -14px 0 26px; gap: 10px; font-size: 10px; }
   .work-inner { padding-block: 58px 50px; }
   .work-heading { display: block; margin-bottom: 26px; }
   .work-heading .eyebrow { margin-bottom: 20px; }
   .work-heading > div { max-width: none; }
   .project-stack { gap: 44px; }
-  .project-row { grid-template-columns: 1fr; gap: 0; }
+  .project-row { grid-template-columns: 1fr; gap: 44px; }
   /* On a phone the plate is the only thing on its row, so it carries its own
      surface instead of reading as a loose column of text under a picture. */
   .project-plate { gap: 15px; padding: 13px; border: 1px solid var(--line); border-radius: 22px; background: var(--ink-raised); }

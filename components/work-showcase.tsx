@@ -1,58 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
-import { motion, useMotionTemplate, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
+import { projects, type Project } from "@/content/projects";
 
-type Project = {
-  name: string;
-  tags: string;
-  description: string;
-  image: string;
-  alt: string;
-  url: string;
-  host: string;
-};
+/* The pair only unveils on a desktop with motion allowed; everywhere else the
+   row keeps unveiling on the way up, as it always did. */
+const canHold = () => window.matchMedia("(min-width: 761px) and (prefers-reduced-motion: no-preference)").matches;
 
-const projects: Project[] = [
-  {
-    name: "ServePilot",
-    tags: "SaaS • Point of Sale • Web",
-    description: "A restaurant management and POS platform that brings checkout, inventory, menu work, staff operations and reporting into one workspace.",
-    image: "/projects/servepilot.jpg",
-    alt: "ServePilot website: the headline “Run every service with confidence” beside a dashboard preview showing daily sales, orders and low stock.",
-    url: "https://nexveins.vercel.app/",
-    host: "nexveins.vercel.app",
-  },
-  {
-    name: "Arch ERP",
-    tags: "ERP • Construction & Interiors • Live demo",
-    description: "Business management for construction and interior projects — jobs, clients, cash in and out, labour, vendors and reports in one workspace, installable from the browser.",
-    image: "/projects/arch-erp.jpg",
-    alt: "Arch ERP dashboard: a dark sidebar listing projects, customers, cash in and out, labour, contractors and vendors, beside an Operations Overview with four summary cards, a cash flow chart and a budget panel.",
-    url: "https://arch-demo-inky.vercel.app/login",
-    host: "arch-demo-inky.vercel.app",
-  },
-  {
-    name: "German Fitness",
-    tags: "E-commerce • Gym • Web",
-    description: "A fitness and equipment storefront presenting training services, premium brands and product discovery for a gym audience.",
-    image: "/projects/german-fitness.jpg",
-    alt: "German Fitness website: a barbell photo behind the headline “Become Unstoppable”, with navigation for brands, products and services.",
-    url: "https://thegermanfitness.com/",
-    host: "thegermanfitness.com",
-  },
-  {
-    name: "RoyalCarHub",
-    tags: "Car Rental • Booking • Web",
-    description: "Premium car rental across 127+ locations in Pakistan — browse the fleet by city and class, then book through WhatsApp or the enquiry form.",
-    image: "/projects/royalcarhub.jpg",
-    alt: "RoyalCarHub homepage: the headline “Premium Car Rental in Pakistan” over a dark street scene with a luxury car, a red Browse Cars button and navigation for All Cars, Categories and Cities.",
-    url: "https://royalcarhub.com/",
-    host: "royalcarhub.com",
-  },
-];
+/* How much of the unveiling the rise still carries before the row stops. */
+const REVEAL_PRE = 0.45;
 
 export function WorkShowcase() {
   const rows: { start: number; items: Project[] }[] = [];
@@ -68,18 +27,69 @@ export function WorkShowcase() {
 }
 
 function ProjectRow({ items, start }: { items: Project[]; start: number }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const anchorValue = useMotionValue(0);
+  const spanValue = useMotionValue(1);
+  const [hold, setHold] = useState({ travel: 0, top: 0 });
+  const { scrollY } = useScroll();
 
   /* One reading for the row, shared by both plates, so the pair always opens on
      the same beat. Measuring each plate separately would let the taller one
      finish later than its neighbour. */
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
+  const progress = useTransform([scrollY, anchorValue, spanValue], ([y, anchor, span]: number[]) => Math.min(1, Math.max(0, (y - anchor) / span)));
+
+  useEffect(() => {
+    const pin = pinRef.current;
+    const frame = frameRef.current;
+    if (!pin || !frame) return;
+    const measure = () => {
+      const height = frame.offsetHeight;
+      const viewport = window.innerHeight;
+      /* The pair holds dead centre, and only as high as the screen allows. */
+      const top = Math.max(0, (viewport - height) / 2);
+      const travel = canHold() && height <= viewport ? height : 0;
+      if (travel > 0) {
+        /* The curtain is already part-open by the time the pair stops, so a row
+           never arrives as two empty frames; the hold plays out the rest. */
+        const span = travel / (1 - REVEAL_PRE);
+        anchorValue.set(pin.getBoundingClientRect().top + window.scrollY - top - REVEAL_PRE * span);
+        spanValue.set(span);
+      } else {
+        /* Without a hold the unveiling runs on the rise, from the row's top edge
+           appearing at the bottom of the screen until it sits in the middle. */
+        anchorValue.set(pin.getBoundingClientRect().top + window.scrollY - viewport);
+        spanValue.set((height + viewport) / 2);
+      }
+      setHold((current) => (current.travel === travel && current.top === top ? current : { travel, top }));
+    };
+    measure();
+    /* The hold opens at a fixed point of the page, so that point is re-read
+       whenever anything above the plates changes the page's height. */
+    const watcher = new ResizeObserver(measure);
+    watcher.observe(document.body);
+    window.addEventListener("resize", measure);
+    return () => {
+      watcher.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [anchorValue, spanValue]);
 
   return (
-    <div className="project-row" ref={ref}>
-      {items.map((project, offset) => (
-        <ProjectPlate key={project.name} project={project} number={start + offset + 1} progress={scrollYProgress} />
-      ))}
+    <div className="project-pin" ref={pinRef}>
+      <div
+        className={`project-row${hold.travel > 0 ? " is-held" : ""}`}
+        ref={frameRef}
+        style={{ "--hold-top": `${hold.top}px` } as CSSProperties}
+      >
+        {items.map((project, offset) => (
+          <ProjectPlate key={project.name} project={project} number={start + offset + 1} progress={progress} />
+        ))}
+      </div>
+
+      {/* The section spends exactly the height of the pair on the unveiling, so the
+          scroll that used to carry the row up the screen now opens it in place. */}
+      {hold.travel > 0 && <div className="project-hold" style={{ height: hold.travel }} aria-hidden="true" />}
     </div>
   );
 }

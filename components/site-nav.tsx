@@ -7,11 +7,11 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useEnquiry } from "@/components/enquiry-dialog";
 
 const links = [
-  { label: "Home", href: "#top" },
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Projects", href: "#work" },
-  { label: "Contact Us", href: "#contact" },
+  { label: "Home", href: "#top", section: "top" },
+  { label: "About", href: "/about", section: "about" },
+  { label: "Services", href: "/services", section: "services" },
+  { label: "Projects", href: "/projects", section: "work" },
+  { label: "Contact Us", href: "/contact", section: "contact" },
 ];
 
 const sectionIds = ["top", "about", "services", "work", "contact"];
@@ -103,7 +103,7 @@ export function SiteNav() {
 
         <nav id="primary-navigation" className={`primary-nav${menuOpen ? " is-open" : ""}`} aria-label="Main navigation">
           {links.map((link) => (
-            <a key={link.href} href={link.href} className={link.href.slice(1) === active ? "is-active" : undefined} aria-current={link.href.slice(1) === active ? "true" : undefined} onClick={closeMenu}>{link.label}</a>
+            <a key={link.href} href={link.href} className={link.section === active ? "is-active" : undefined} aria-current={link.section === active ? "true" : undefined} onClick={closeMenu}>{link.label}</a>
           ))}
           <a className="nav-contact nav-contact-mobile" href="#contact" aria-haspopup="dialog" onClick={(event) => { event.preventDefault(); closeMenu(); openEnquiry(); }}>
             Start a project <ArrowUpRight size={15} weight="bold" aria-hidden="true" />

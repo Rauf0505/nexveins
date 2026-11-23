@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { EnquiryProvider } from "@/components/enquiry-dialog";
+import { ScrollTop } from "@/components/scroll-top";
 import "./globals.css";
 
 const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
@@ -35,7 +36,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body><EnquiryProvider>{children}</EnquiryProvider></body>
+      <body><EnquiryProvider>{children}<ScrollTop /></EnquiryProvider></body>
     </html>
   );
 }
