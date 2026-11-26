@@ -275,19 +275,13 @@ button { color: inherit; }
 .why-row button:hover .why-row-title { color: var(--paper); }
 .why-row.is-current .why-row-title { color: var(--paper); }
 .why-panels { display: grid; }
-.why-panel { grid-area: 1 / 1; opacity: 0; transform: translateY(14px) scale(.98); pointer-events: none; transition: opacity .35s ease, transform .4s var(--curve); }
-.why-panel.is-active { opacity: 1; transform: none; pointer-events: auto; }
-.why-panel-card { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 380px; padding: clamp(26px, 3.8vw, 42px); border: 1px solid var(--line-strong); border-radius: 20px; background: radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 12%, var(--ink-raised)) 0%, var(--ink-raised) 70%); box-shadow: 0 24px 60px rgb(2 8 20 / 34%), inset 0 1px 0 rgb(255 255 255 / 8%); overflow: hidden; transition: border-color .3s ease, box-shadow .3s ease; }
-.why-panel-card::before { content: ""; position: absolute; top: 0; right: 0; width: 140px; height: 140px; background: radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%); pointer-events: none; }
-.why-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
-.why-panel-icon { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line-strong)); background: color-mix(in srgb, var(--accent) 12%, var(--ink-soft)); color: var(--accent); box-shadow: 0 4px 16px rgb(23 200 245 / 12%); }
-.why-panel-index { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line-strong); background: rgb(255 255 255 / 4%); color: var(--accent); font: 550 11px/1 var(--font-mono); letter-spacing: .06em; }
-.why-panel-main { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.why-panel-main h3 { margin: 0; color: var(--paper); font-size: clamp(26px, 2.8vw, 38px); line-height: 1.15; font-weight: 560; letter-spacing: -.03em; }
-.why-panel-body { max-width: 48ch; margin: 16px 0 0; color: var(--muted); font-size: 16px; line-height: 1.6; }
-.why-panel-footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
-.why-panel-tag { color: var(--muted); font: 500 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
-.why-panel-tag::before { content: ""; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.why-panel { grid-area: 1 / 1; opacity: 0; transform: translateY(14px); pointer-events: none; }
+/* Only the arriving reason is animated. The one being replaced disappears at
+   once, so words come in but never fade away. */
+.why-panel.is-active { opacity: 1; transform: none; pointer-events: auto; transition: opacity .45s ease, transform .5s var(--curve); }
+.why-panel-icon { display: inline-flex; color: var(--accent); }
+.why-panel h3 { margin: 16px 0 0; font-size: clamp(33px, 3.8vw, 52px); line-height: 1.04; font-weight: 450; letter-spacing: -.055em; }
+.why-panel-body { max-width: 52ch; margin: 18px 0 0; color: var(--muted); font-size: 16.5px; line-height: 1.6; }
 
 .process-track { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 30px; }
 .process-track::before { position: absolute; top: 0; right: 0; left: 0; height: 1px; content: ""; background: var(--line-strong); }
@@ -537,8 +531,7 @@ button { color: inherit; }
   .plate-media { aspect-ratio: 3 / 2; border-radius: 14px; box-shadow: 0 18px 40px rgb(2 8 20 / 28%); }
   .plate-tags { font-size: 10px; letter-spacing: .1em; }
   .why-split { grid-template-columns: 1fr; gap: 32px; }
-  .why-panel-card { min-height: auto; padding: 24px 20px; border-radius: 16px; }
-  .why-panel-main h3 { font-size: clamp(22px, 5.5vw, 28px); }
+  .why-panel h3 { font-size: 34px; }
   .process-track { display: block; padding-left: 26px; }
   .process-track::before { top: 4px; bottom: 4px; left: 4px; right: auto; width: 1px; height: auto; }
   .process-step { padding: 0 0 30px; }
@@ -622,15 +615,7 @@ button { color: inherit; }
 :root[data-theme="light"] .select-option-item.is-selected {
   background: color-mix(in srgb, var(--accent) 14%, #f4f8fb);
 }
-:root[data-theme="light"] .why-panel-card {
-  background: radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 8%, #ffffff) 0%, #ffffff 70%);
-  border-color: rgb(10 30 60 / 16%);
-  box-shadow: 0 20px 48px rgb(10 30 60 / 10%), inset 0 1px 0 rgb(255 255 255 / 80%);
-}
-:root[data-theme="light"] .why-panel-index {
-  background: rgb(10 30 60 / 5%);
-  border-color: rgb(10 30 60 / 14%);
-}
+
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

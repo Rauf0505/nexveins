@@ -41,21 +41,9 @@ export function WhySection() {
               const Icon = reason.icon;
               return (
                 <div className={`why-panel${index === active ? " is-active" : ""}`} key={reason.title} aria-hidden={index !== active}>
-                  <div className="why-panel-card">
-                    <div className="why-panel-header">
-                      <span className="why-panel-icon">
-                        <Icon size={26} weight="regular" aria-hidden="true" />
-                      </span>
-                      <span className="why-panel-index">{String(index + 1).padStart(2, "0")} / 06</span>
-                    </div>
-                    <div className="why-panel-main">
-                      <h3>{reason.title}</h3>
-                      <p className="why-panel-body">{reason.body}</p>
-                    </div>
-                    <div className="why-panel-footer">
-                      <span className="why-panel-tag">NexVeins Standard</span>
-                    </div>
-                  </div>
+                  <span className="why-panel-icon"><Icon size={30} weight="light" aria-hidden="true" /></span>
+                  <h3>{reason.title}</h3>
+                  <p className="why-panel-body">{reason.body}</p>
                 </div>
               );
             })}
