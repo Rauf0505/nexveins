@@ -53,7 +53,10 @@ export function EnquiryProvider({ children }: { children: ReactNode }) {
       >
         <div className="enquiry-panel">
           <div className="enquiry-head">
-            <p className="eyebrow"><span className="eyebrow-mark" /> Enquiry</p>
+            <div className="enquiry-badge">
+              <span className="eyebrow-mark" />
+              <span>Project Enquiry</span>
+            </div>
             <button
               type="button"
               className="enquiry-close"
@@ -61,10 +64,15 @@ export function EnquiryProvider({ children }: { children: ReactNode }) {
               onClick={() => setOpen(false)}
               aria-label="Close enquiry form"
             >
-              <X size={16} weight="bold" aria-hidden="true" />
+              <X size={17} weight="bold" aria-hidden="true" />
             </button>
           </div>
-          <h3 className="enquiry-title" id="enquiry-title">Start a project</h3>
+          <div className="enquiry-intro">
+            <h3 className="enquiry-title" id="enquiry-title">Start a project</h3>
+            <p className="enquiry-subtitle">
+              Tell us what you are looking to build. We'll review your project details and get back to you with architectural guidance and estimate.
+            </p>
+          </div>
           <ContactForm />
         </div>
       </div>

@@ -67,10 +67,10 @@ export function ContactContent() {
           <div className="page-wrap ct-form-grid">
             <Reveal className="ct-form-copy">
               <p className="eyebrow"><span className="eyebrow-mark" /> The brief</p>
-              <h2 id="ct-form-title">Write it here, <span>send it from your own inbox</span></h2>
+              <h2 id="ct-form-title">Write it here, <span>we'll take it from there</span></h2>
               <p className="ct-form-note">
-                This site has no inbox of its own, so nothing is stored on the website. Submitting opens your email app
-                with the message already written — check it, then send.
+                Send the form and your message lands straight in our inbox. We read every enquiry and reply with a plan —
+                nothing is stored on the website.
               </p>
               <ol className="ct-steps">
                 {steps.map((step, index) => (
