@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowRight } from "@phosphor-icons/react";
 import { PageNav } from "@/components/page-nav";
 import { PageFooter } from "@/components/page-footer";
 import { ContactSection } from "@/components/contact-section";
@@ -20,19 +20,11 @@ export function ServicesContent() {
         <section className="sv-hero" id="top" aria-labelledby="sv-hero-title">
           <div className="sv-hero-inner page-wrap">
             <p className="eyebrow sv-hero-eyebrow"><span className="eyebrow-mark" /> Services</p>
-            <h1 id="sv-hero-title">Five ways we <span>remove friction.</span></h1>
+            <h1 id="sv-hero-title">Five ways we<br /><span>remove friction</span></h1>
             <p className="sv-lede">
               Each service has its own page: what it covers, who it suits and how we work on it. Start with the one closest
               to the problem you are trying to solve — most projects turn out to need two or three of them together.
             </p>
-            <div className="sv-actions">
-              <a className="button button-primary" href="#contact">
-                Start a project <ArrowUpRight size={17} weight="bold" aria-hidden="true" />
-              </a>
-              <a className="button button-outline" href="/projects">
-                See selected work <ArrowUpRight size={17} weight="bold" aria-hidden="true" />
-              </a>
-            </div>
           </div>
         </section>
 
@@ -40,7 +32,7 @@ export function ServicesContent() {
           <Reveal className="intro-grid page-wrap">
             <p className="eyebrow">How they fit together</p>
             <h2 className="intro-statement" id="sv-statement-title">
-              One brief, <em>five disciplines.</em>
+              One brief, <em>five disciplines</em>
             </h2>
             <p className="intro-note">
               Tell us the outcome you want and we will say which of these actually matter for it — and which you can skip.
@@ -52,7 +44,7 @@ export function ServicesContent() {
           <div className="page-wrap">
             <Reveal className="section-heading">
               <p className="eyebrow"><span className="eyebrow-mark" /> The five services</p>
-              <h2 id="sv-offer-title">Open any one for <span>the full detail.</span></h2>
+              <h2 id="sv-offer-title">Open any one for <span>the full detail</span></h2>
             </Reveal>
 
             <Reveal className="sv-list" delay={0.08}>

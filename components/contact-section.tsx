@@ -34,7 +34,7 @@ export function ContactSection() {
       <Reveal className="contact-inner page-wrap">
         <div className="contact-copy">
           <p className="eyebrow"><span className="eyebrow-mark" /> Contact us</p>
-          <h2 id="contact-title">Let's talk about your <span>next project.</span></h2>
+          <h2 id="contact-title">Let's talk about your <span>next project</span></h2>
           <p>Have a project in mind? Tell us what you're planning, and let's discuss how NexVeins can help.</p>
           <div className="contact-actions">
             <button type="button" className="button button-primary contact-enquiry-toggle" onClick={openEnquiry}>

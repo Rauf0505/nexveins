@@ -14,7 +14,7 @@ const links = [
   { key: "home", label: "Home", href: "/" },
   { key: "about", label: "About", href: "/about" },
   { key: "services", label: "Services", href: "/services" },
-  { key: "work", label: "Projects", href: "/projects" },
+  { key: "projects", label: "Projects", href: "/projects" },
   { key: "contact", label: "Contact Us", href: "/contact" },
 ];
 

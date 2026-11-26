@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, EnvelopeSimple, FacebookLogo, InstagramLogo, LinkedinLogo, Phone, WhatsappLogo } from "@phosphor-icons/react";
+import { EnvelopeSimple, FacebookLogo, InstagramLogo, LinkedinLogo, Phone, WhatsappLogo } from "@phosphor-icons/react";
 import { PageNav } from "@/components/page-nav";
 import { PageFooter } from "@/components/page-footer";
 import { ContactForm } from "@/components/contact-form";
@@ -35,19 +35,11 @@ export function ContactContent() {
         <section className="ct-hero" id="top" aria-labelledby="ct-hero-title">
           <div className="ct-hero-inner page-wrap">
             <p className="eyebrow ct-hero-eyebrow"><span className="eyebrow-mark" /> Contact us</p>
-            <h1 id="ct-hero-title">Let's talk about your <span>next project.</span></h1>
+            <h1 id="ct-hero-title">Let's talk about<br /><span>your next project</span></h1>
             <p className="ct-lede">
               Have a project in mind? Tell us what you're planning, and let's discuss how NexVeins can help. Use the form,
               or pick whichever channel is quicker for you.
             </p>
-            <div className="ct-actions">
-              <a className="button button-primary" href="#contact-form">
-                Fill in the brief <ArrowUpRight size={17} weight="bold" aria-hidden="true" />
-              </a>
-              <a className="button button-outline" href="/projects">
-                See the work first <ArrowUpRight size={17} weight="bold" aria-hidden="true" />
-              </a>
-            </div>
           </div>
         </section>
 
@@ -55,7 +47,7 @@ export function ContactContent() {
           <div className="page-wrap">
             <Reveal className="section-heading">
               <p className="eyebrow"><span className="eyebrow-mark" /> Reach us directly</p>
-              <h2 id="ct-channels-title">Three ways in, <span>one team behind them.</span></h2>
+              <h2 id="ct-channels-title">Three ways in, <span>one team behind them</span></h2>
             </Reveal>
 
             <Reveal className="ct-channel-grid" delay={0.08}>
@@ -75,7 +67,7 @@ export function ContactContent() {
           <div className="page-wrap ct-form-grid">
             <Reveal className="ct-form-copy">
               <p className="eyebrow"><span className="eyebrow-mark" /> The brief</p>
-              <h2 id="ct-form-title">Write it here, <span>send it from your own inbox.</span></h2>
+              <h2 id="ct-form-title">Write it here, <span>send it from your own inbox</span></h2>
               <p className="ct-form-note">
                 This site has no inbox of its own, so nothing is stored on the website. Submitting opens your email app
                 with the message already written — check it, then send.

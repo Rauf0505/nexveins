@@ -208,21 +208,12 @@ button { color: inherit; }
 .work-heading .eyebrow { margin-bottom: 23px; }
 /* Holds the width the heading had while the intro sentence sat beside it, so its line breaks survive the removal. */
 .work-heading > div { max-width: calc(100% - 390px - 4%); }
-/* Two plates per row. Each pair rises to the middle of the screen and stops
-   there for exactly its own height of scroll while the shots are unveiled from
-   their top edges down and the text rises after them — the same beat, now
-   played in place instead of on the way up (see work-showcase.tsx). The extra
-   height sits behind the held row, so nothing empty ever shows. */
+/* Two plates per row, both shots drawn in full as soon as the row is on screen. */
 .project-stack { display: flex; flex-direction: column; gap: clamp(54px, 6.5vw, 112px); }
-.project-pin { position: relative; }
-.project-row.is-held { position: sticky; top: var(--hold-top, 0px); }
 .project-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(26px, 3.4vw, 54px); }
 .project-plate { display: grid; gap: 18px; }
 .plate-media-link { display: block; }
 .plate-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 18px; background: var(--ink); box-shadow: 0 30px 70px rgb(2 8 20 / 38%); transition: transform .5s var(--curve), border-color .3s ease, box-shadow .5s var(--curve); }
-/* The curtain and the over-crop sit on this layer, so the plate's border and its
-   badge stay put while only the shot itself opens. */
-.plate-shot { position: absolute; inset: 0; will-change: clip-path, transform; }
 .plate-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.1s var(--curve); }
 .plate-meta { display: grid; gap: 12px; }
 .plate-tags { margin: 0; color: var(--muted); font: 500 11px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
@@ -239,10 +230,9 @@ button { color: inherit; }
 .plate-open { position: absolute; z-index: 2; right: 14px; bottom: 14px; display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid rgb(241 247 255 / 46%); border-radius: 50%; background: rgb(5 9 20 / 74%); box-shadow: 0 6px 18px rgb(2 8 20 / 32%); color: #eaf3ff; transition: transform .38s var(--curve), background .25s ease, border-color .25s ease, color .25s ease; }
 /* Hover: the plate lifts out of the grid, its edge takes the accent, the shot
    leans in behind the frame, the name picks up the accent and the arrow steps
-   forward. The zoom is on the img because the scroll reveal owns the transform
-   on .plate-shot. Mirrored on :focus-within so the keyboard reads the same. */
+   forward. Mirrored on :focus-within so the keyboard reads the same. */
 .project-plate:hover .plate-media, .project-plate:focus-within .plate-media { transform: translateY(-6px); border-color: color-mix(in srgb, var(--accent) 42%, var(--line-strong)); box-shadow: 0 42px 92px rgb(2 8 20 / 52%); }
-.project-plate:hover .plate-shot img, .project-plate:focus-within .plate-shot img { transform: scale(1.06); }
+.project-plate:hover .plate-media img, .project-plate:focus-within .plate-media img { transform: scale(1.06); }
 .project-plate:hover .plate-name h3, .project-plate:focus-within .plate-name h3 { color: var(--accent); }
 .project-plate:hover .plate-arrow, .project-plate:focus-within .plate-arrow { transform: translateX(7px); }
 .project-plate:hover .plate-open, .project-plate:focus-within .plate-open { transform: translate(4px, -4px); border-color: var(--accent); background: var(--accent); color: #050914; }
@@ -438,7 +428,9 @@ button { color: inherit; }
   .nav-glass .theme-toggle { width: 34px; min-height: 34px; padding: 0; justify-content: center; }
   .nav-glass .theme-toggle span { display: none; }
   .menu-toggle { display: grid; flex: 0 0 34px; width: 34px; height: 34px; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; background: rgb(255 255 255 / 4%); }
-  .primary-nav { position: fixed; inset: 0; z-index: 0; display: flex; flex-direction: column; align-items: stretch; justify-content: safe center; gap: 0; overflow-y: auto; padding: calc(78px + env(safe-area-inset-top)) 26px calc(26px + env(safe-area-inset-bottom)); background: var(--ink-soft); font-size: 17px; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-10px); transition: opacity .22s ease, transform .22s ease, visibility .22s ease; }
+  .primary-nav { position: fixed; inset: 0; z-index: 0; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0; overflow-y: auto; padding: calc(98px + env(safe-area-inset-top)) 26px calc(26px + env(safe-area-inset-bottom)); background: var(--ink-soft); font-size: 17px; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-10px); transition: opacity .22s ease, transform .22s ease, visibility .22s ease; }
+  /* Hairline in the gap between the floating bar and the raised list. */
+  .primary-nav::before { position: absolute; top: calc(86px + env(safe-area-inset-top)); right: 20px; left: 20px; height: 1px; content: ""; background: var(--line); }
   .primary-nav.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
   .primary-nav > a:not(.nav-contact) { min-height: 56px; padding: 0 2px; border-bottom: 1px solid var(--line); }
   /* The active dot is centred on its link, so on a full-width row it floats in
@@ -447,7 +439,8 @@ button { color: inherit; }
   .primary-nav > a.is-active { color: var(--accent); }
   .primary-nav .nav-contact-mobile { display: flex; align-items: center; justify-content: space-between; min-height: 52px; margin-top: 20px; }
   .nav-contact-desktop { display: none; }
-  .hero { min-height: 100svh; padding-top: calc(96px + env(safe-area-inset-top)); padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  /* The 800px floor keeps the copy's air when the viewport is shorter than the hero. */
+  .hero { min-height: max(100svh, 800px); padding-top: calc(96px + env(safe-area-inset-top)); padding-bottom: calc(142px + env(safe-area-inset-bottom)); }
   .hero-visual::after { pointer-events: none; background: var(--hero-scrim-mobile); }
   :root[data-theme="light"] .hero-visual::after { background: linear-gradient(180deg, rgb(238 243 251 / 74%) 0%, rgb(238 243 251 / 40%) 46%, rgb(238 243 251 / 84%) 100%); }
   .hero-copy { padding-bottom: 0; }

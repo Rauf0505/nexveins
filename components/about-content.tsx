@@ -83,19 +83,11 @@ export function AboutContent() {
         <section className="ab-hero" id="top" aria-labelledby="ab-hero-title">
           <div className="ab-hero-inner page-wrap">
             <p className="eyebrow ab-hero-eyebrow"><span className="eyebrow-mark" /> About NexVeins</p>
-            <h1 id="ab-hero-title">A studio built around <span>one question.</span></h1>
+            <h1 id="ab-hero-title">A studio built around <span>one question</span></h1>
             <p className="ab-hero-intro">
               Does this remove real friction? It is the first thing we ask about a feature, a screen, an automation — and the
               reason our work ends up as software, websites and marketing that a business can actually run on.
             </p>
-            <div className="ab-hero-actions">
-              <a className="button button-primary" href="#contact">
-                Start a project <ArrowUpRight size={17} weight="bold" aria-hidden="true" />
-              </a>
-              <a className="button button-outline" href="/projects">
-                See selected work <ArrowUpRight size={17} weight="bold" aria-hidden="true" />
-              </a>
-            </div>
           </div>
         </section>
 
@@ -103,7 +95,7 @@ export function AboutContent() {
           <Reveal className="intro-grid page-wrap">
             <p className="eyebrow">What we believe</p>
             <h2 className="intro-statement" id="ab-statement-title">
-              Software should <em>remove friction,</em> not add decoration.
+              Software should <em>remove friction,</em> not add decoration
             </h2>
             <p className="intro-note">
               Everything here follows from that: understand the business, agree what success looks like, then design and build
@@ -116,7 +108,7 @@ export function AboutContent() {
           <div className="approach page-wrap">
             <Reveal className="approach-lead">
               <p className="eyebrow"><span className="eyebrow-mark" /> Who we are</p>
-              <h2 id="ab-story-title">Creativity, technology <span>and follow-through.</span></h2>
+              <h2 id="ab-story-title">Creativity, technology <span>and follow-through</span></h2>
               <p>
                 At NexVeins, we combine creativity, technology and innovation to help businesses grow in the digital world.
                 From custom software solutions to modern websites and intelligent automation, we build digital experiences
@@ -149,7 +141,7 @@ export function AboutContent() {
           <div className="ab-caps-inner page-wrap">
             <Reveal className="section-heading">
               <p className="eyebrow"><span className="eyebrow-mark" /> What we do</p>
-              <h2 id="ab-caps-title">Five disciplines, <span>one team.</span></h2>
+              <h2 id="ab-caps-title">Five disciplines, <span>one team</span></h2>
             </Reveal>
 
             <Reveal className="ab-cap-list" delay={0.1}>
@@ -177,7 +169,7 @@ export function AboutContent() {
           <div className="page-wrap">
             <Reveal className="section-heading">
               <p className="eyebrow"><span className="eyebrow-mark" /> How we work</p>
-              <h2 id="ab-values-title">The standards we <span>hold ourselves to.</span></h2>
+              <h2 id="ab-values-title">The standards we <span>hold ourselves to</span></h2>
             </Reveal>
 
             <Reveal className="ab-value-grid" delay={0.1}>

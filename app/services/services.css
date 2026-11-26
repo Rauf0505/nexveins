@@ -9,7 +9,6 @@
 .sv-hero-eyebrow, .sd-hero-eyebrow { margin-bottom: 26px; }
 .sv-lede, .sd-lede { max-width: 58ch; margin: 24px 0 0; color: var(--muted); font-size: 17.5px; line-height: 1.6; }
 .sd-summary { max-width: 46ch; margin: 22px 0 0; color: var(--paper); font-size: 21px; line-height: 1.4; letter-spacing: -.02em; }
-.sv-actions, .sd-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 
 /* Index: one row per service, and the whole row is the link. */
 .sv-hero { display: flex; align-items: center; min-height: 62svh; padding-bottom: clamp(52px, 6vw, 84px); }
@@ -84,7 +83,6 @@
   .sv-hero { min-height: auto; padding-bottom: 44px; }
   .sv-hero h1, .sd-hero h1 { font-size: clamp(40px, 10vw, 58px); }
   .sv-lede, .sd-lede { margin-top: 20px; font-size: 15.5px; }
-  .sv-actions, .sd-actions { margin-top: 26px; gap: 10px; }
   .sv-row { grid-template-columns: minmax(0, 1fr) 42px; grid-template-areas: "thumb thumb" "body arrow"; gap: 16px 14px; padding: 24px 0; }
   .sv-body h3 { font-size: 27px; }
   .sd-hero-grid { grid-template-columns: 1fr; padding-bottom: 46px; }

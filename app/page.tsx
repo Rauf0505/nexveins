@@ -9,6 +9,18 @@ import { WorkShowcase } from "@/components/work-showcase";
 import { ProcessSection } from "@/components/process-section";
 import { ContactSection } from "@/components/contact-section";
 import { SiteFooter } from "@/components/site-footer";
+import { StructuredData } from "@/components/structured-data";
+import { graph, projectsListNode, servicesListNode, webPageNode } from "@/lib/schema";
+import { HOME_TITLE, SITE_DESCRIPTION } from "@/lib/seo";
+
+/* The home page is where a crawler decides what the site is about, so it says
+   plainly what is only drawn here: the five services in order and the four
+   builds that are live and clickable today. */
+const homeGraph = graph([
+  webPageNode({ path: "/", title: HOME_TITLE, description: SITE_DESCRIPTION }),
+  servicesListNode(),
+  projectsListNode(),
+]);
 
 export default function Home() {
   return (
@@ -21,7 +33,7 @@ export default function Home() {
           <HeroVisual />
           <div className="hero-copy page-wrap">
             <p className="eyebrow hero-eyebrow"><span className="eyebrow-mark" /> Independent product engineering studio</p>
-            <h1 id="hero-title">Software with<br />a <span>point of view.</span></h1>
+            <h1 id="hero-title">Let’s build<br /><span>what’s next</span></h1>
             <p className="hero-intro">We turn ambitious ideas into useful, beautifully made digital products.</p>
             <HeroActions />
           </div>
@@ -31,7 +43,7 @@ export default function Home() {
           <Reveal className="intro-grid page-wrap">
             <p className="eyebrow">Our point of view</p>
             <h2 className="intro-statement" id="studio-intro-title">
-              Great software starts by solving the <em>right problem.</em>
+              Great software starts by solving the <em>right problem</em>
             </h2>
             <p className="intro-note">
               We bring product thinking, design, and engineering together to turn ambitious ideas into digital products people rely on.
@@ -52,7 +64,7 @@ export default function Home() {
             <Reveal className="work-heading">
               <div>
                 <p className="eyebrow"><span className="eyebrow-mark" /> Selected work</p>
-                <h2 id="work-title">Selected work. <span>Real solutions.</span></h2>
+                <h2 id="work-title">Selected work. <span>Real solutions</span></h2>
               </div>
             </Reveal>
             <WorkShowcase />
@@ -64,6 +76,7 @@ export default function Home() {
         <ContactSection />
       </main>
 
+      <StructuredData data={homeGraph} />
       <SiteFooter />
     </>
   );

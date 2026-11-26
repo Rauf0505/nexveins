@@ -1,20 +1,33 @@
 import type { Metadata } from "next";
 import { AboutContent } from "@/components/about-content";
+import { StructuredData } from "@/components/structured-data";
+import { breadcrumbNode, graph, webPageNode } from "@/lib/schema";
+import { pageSeo } from "@/lib/seo";
 import "./about.css";
 
-export const metadata: Metadata = {
-  title: "About NexVeins® | The studio behind the software",
-  description:
-    "How NexVeins works: understand the business before writing code, agree what success looks like, then build custom systems, websites, SEO and AI automation backwards from it.",
-  keywords: ["about NexVeins", "software house", "digital studio", "custom software", "AI automation"],
-  openGraph: {
-    title: "About NexVeins® | The studio behind the software",
-    description: "Creativity, technology and innovation applied to real business problems — custom systems, websites, marketing, SEO and AI automation.",
-    type: "website",
-    url: "/about",
-  },
-};
+const TITLE = "About NexVeins® | The studio behind the software";
+const DESCRIPTION =
+  "How NexVeins works: read the business before writing code, agree the outcome, then build software, websites, SEO and AI automation backwards from it.";
+
+export const metadata: Metadata = pageSeo({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: "/about",
+  keywords: ["about NexVeins", "software house", "product engineering studio", "custom software", "AI automation"],
+  ogTitle: "The studio behind the software",
+  ogLabel: "About the studio",
+});
+
+const aboutGraph = graph([
+  webPageNode({ path: "/about", title: TITLE, description: DESCRIPTION, type: "AboutPage" }),
+  breadcrumbNode([{ name: "Home", path: "/" }, { name: "About", path: "/about" }]),
+]);
 
 export default function AboutPage() {
-  return <AboutContent />;
+  return (
+    <>
+      <AboutContent />
+      <StructuredData data={aboutGraph} />
+    </>
+  );
 }

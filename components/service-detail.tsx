@@ -32,14 +32,6 @@ export function ServiceDetail({ service }: { service: Service }) {
               <h1 id="sd-title">{service.title}</h1>
               <p className="sd-summary">{service.summary}</p>
               <p className="sd-lede">{service.lede}</p>
-              <div className="sd-actions">
-                <a className="button button-primary" href="#contact">
-                  Start a project <ArrowUpRight size={17} weight="bold" aria-hidden="true" />
-                </a>
-                <a className="button button-outline" href="/about">
-                  How we work <ArrowUpRight size={17} weight="bold" aria-hidden="true" />
-                </a>
-              </div>
             </div>
             <div className="sd-hero-media" style={{ "--media-ratio": service.ratio } as CSSProperties}>
               <Image src={service.image} alt={service.alt} fill sizes="(max-width: 760px) 88vw, 620px" priority />
@@ -51,7 +43,7 @@ export function ServiceDetail({ service }: { service: Service }) {
           <div className="sd-points-inner page-wrap">
             <Reveal className="section-heading">
               <p className="eyebrow"><span className="eyebrow-mark" /> What we build</p>
-              <h2 id="sd-points-title">{service.title} <span>in practice.</span></h2>
+              <h2 id="sd-points-title">{service.title} <span>in practice</span></h2>
             </Reveal>
 
             <Reveal className="sd-point-list" delay={0.08}>
@@ -85,7 +77,7 @@ export function ServiceDetail({ service }: { service: Service }) {
           <div className="page-wrap">
             <Reveal className="section-heading">
               <p className="eyebrow"><span className="eyebrow-mark" /> Where it connects</p>
-              <h2 id="sd-connects-title">Two services that make <span>this one work harder.</span></h2>
+              <h2 id="sd-connects-title">Two services that make <span>this one work harder</span></h2>
             </Reveal>
 
             <Reveal className="sd-connect-grid" delay={0.08}>

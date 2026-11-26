@@ -219,7 +219,7 @@ export function ServicesTrack() {
           <div className="page-wrap">
             <Reveal className="section-heading">
               <p className="eyebrow"><span className="eyebrow-mark" /> Services</p>
-              <h2 id="services-title">Solutions that move your <span>business forward.</span></h2>
+              <h2 id="services-title">Solutions that move your <span>business forward</span></h2>
               <p className="services-lead">Software, websites, social media, search and automation — the parts that keep your business running and make it easy to find.</p>
             </Reveal>
           </div>

@@ -9,7 +9,6 @@
 .pj-hero-eyebrow { margin-bottom: 26px; }
 .pj-hero-inner { max-width: 1040px; }
 .pj-lede { max-width: 58ch; margin: 24px 0 0; color: var(--muted); font-size: 17.5px; line-height: 1.6; }
-.pj-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 
 .pj-list { border-top: 1px solid var(--line-strong); }
 .pj-row { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 38px; align-items: start; padding: 34px 0; border-bottom: 1px solid var(--line); }
@@ -33,7 +32,6 @@
   .pj-hero { padding-top: calc(104px + env(safe-area-inset-top)); padding-bottom: 44px; }
   .pj-hero h1 { font-size: clamp(40px, 10vw, 58px); }
   .pj-lede { margin-top: 20px; font-size: 15.5px; }
-  .pj-actions { margin-top: 26px; gap: 10px; }
   .pj-row { grid-template-columns: 1fr; gap: 16px; padding: 26px 0; }
   .pj-body h3 { font-size: 27px; }
   .pj-tags { letter-spacing: .1em; }
