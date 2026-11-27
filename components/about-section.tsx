@@ -14,7 +14,7 @@ export function AboutSection() {
       <div className="approach page-wrap">
         <Reveal className="approach-lead">
           <p className="eyebrow"><span className="eyebrow-mark" /> About NexVeins</p>
-          <h2 id="about-title">Turning ideas into <span>digital experiences.</span></h2>
+          <h2 id="about-title">Turning ideas into <span>digital experiences</span></h2>
           <p>
             At NexVeins, we combine creativity, technology and innovation to help businesses grow in the digital world.
             From custom software solutions to modern websites and intelligent automation, we build digital experiences

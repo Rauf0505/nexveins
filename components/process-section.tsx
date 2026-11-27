@@ -13,7 +13,7 @@ export function ProcessSection() {
       <div className="page-wrap">
         <Reveal className="section-heading">
           <p className="eyebrow"><span className="eyebrow-mark" /> Our working process</p>
-          <h2 id="process-title">From concept to <span>completion.</span></h2>
+          <h2 id="process-title">From concept to <span>completion</span></h2>
         </Reveal>
         <Reveal className="process-track">
           {steps.map((step, index) => (

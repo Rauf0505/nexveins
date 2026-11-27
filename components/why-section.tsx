@@ -21,7 +21,7 @@ export function WhySection() {
       <div className="page-wrap">
         <Reveal className="section-heading">
           <p className="eyebrow"><span className="eyebrow-mark" /> Why NexVeins</p>
-          <h2 id="why-title">Why businesses <span>choose NexVeins.</span></h2>
+          <h2 id="why-title">Why businesses <span>choose NexVeins</span></h2>
         </Reveal>
 
         <Reveal className="why-split">
